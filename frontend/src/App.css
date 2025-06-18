@@ -369,8 +369,9 @@ body {
     font-weight: 400;
     font-style: normal;
     font-size: 1.1rem;
-    background-color: #C1CFA1;
-    border: 1px solid rgb(95, 95, 95);
+    background: linear-gradient(to right, #d6edbc 0%, #c5e58f 15%, #b0ea72 35%, #b0ea72 65%, #c5e58f 90%, #d6edbc 100%);
+    color: #215624;
+    letter-spacing: 1px;
 }
 
 .optionsdiv {
@@ -384,7 +385,14 @@ body {
 .option {
     width: 25%;
     height: 100%;
-    /* background-color: #9fbe90; */
+    transition: all 0.3s;
+    cursor: pointer;
+}
+
+.option:hover {
+    transform: translateY(-10px);
+    color: #2e4b30;
+    text-shadow: 0px 3px 5px rgba(0, 0, 0, 0.3);
 }
 
 .content {
@@ -412,53 +420,64 @@ body {
     height: 100%;
     object-fit: cover;
     display: block;
-    filter: brightness(95%);
+    /* filter: brightness(95%);
     
-    opacity: 90%; 
+    opacity: 90%;  */
   }
 
 .title-main {
     position: absolute;
-    top: 35%;
-    left: 5%;
     font-family: "Outfit", sans-serif;
     font-size: 3.5rem;
     letter-spacing: 0.1px; 
-    top: 35%;
-    left: 5%;
-    right: 5%; /* Add this to prevent overflow */
-    max-width: 90%; /* Prevent text from going too wide */
+    top: 34%;
+    left: 1%;
+    right: 5%;
+    max-width: 50%;
+    line-height: 100px;
     text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
     color: rgb(255, 255, 255);
     filter: brightness(100%);
+    font-size: clamp(2rem, 8vw, 3.5rem);
 }
 
 .container-main {
     height: 400px;
     width: 100%;
-    background-color: #EDE8DC;
+    background-color: #dde7dc;
     flex-direction: row;
-    gap:50px;   
-    padding: 40px 20px; 
+    gap: 50px;   
+    padding: 100px 20px; 
+    flex-wrap: wrap;
+    min-height: fit-content;
 }
 
 .internal-main {
     width: 420px;
     height: 320px;
-    background-color: #A5B68D;
-    margin: 50px 0px;  
+    background: linear-gradient(to bottom right, #d7f4d0, #c9e9ba);
+    /* margin: 50px 0px;   */
     border-radius: 20px; 
-    box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+    box-shadow: 0 1px 8px rgba(0,0,0,0.07);
     justify-content: flex-start;
     padding: 30px;
     gap: 15px;
+    color: #2e5533;
+    transition: all 0.3s;
+    border: 2px solid #cee6c5;
+}
+
+.internal-main:hover {
+    box-shadow: 0px 15px 20px rgba(0,0,0, 0.11);
+    border-top: 2px solid #96a790;
+    transform: translateY(-15px);
 }
 
 .card-image-div {
     height: 80px;
     width: 80px;
     border-radius: 50%;
-    background-color: #677258;
+    background-color: #a9cfa0;
     box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
 }
 
@@ -477,6 +496,7 @@ body {
     text-align: center;
     font-weight: 300;
     margin-bottom: 5px;
+    color: #1f5631;
 }
 
 .card-button {
@@ -487,16 +507,21 @@ body {
     border-radius: 10px;
     border: none;
     font-size: 0.9rem;
-    background-color: #677258;
-    background-color: #7b8769;
+    background-color: #80b97d;
     color: white;
     cursor: pointer;
-    box-shadow: 0px 10px 0px rgba(0,0,0,0.4);
+    box-shadow: 0px 10px 0px #6c9d6b;
     transition: all 0.3s;
+    color: white;
+}
+
+a {
+    color: white;
+    text-decoration: none;
 }
 
 .card-button:hover {
-    background-color: #677258;
+    background-color: #6ea46c;
     box-shadow: 0px 0px 0px rgba(0,0,0,0.4);
     transform: translateY(3px);
 }
@@ -508,11 +533,44 @@ body {
 .footer-main {
     height: 300px;
     width: 100%;
-    background-color: #EDE8DC;    
+    background-color: #dde7dc;  
     border-top: 1px solid black;
 }
 
+@media (max-width: 600px) {
+    .optionsdiv {
+        gap: 25px;
+        font-size: 1rem;
+    }
+    .title-main {
+        top: 20%;
+        left: 2%;
+        right: 5%;
+        line-height: 80px;
+    }
+    .container-main {
+        gap: 30px;   
+    }
+    .internal-main {
+        margin: 0px;  
+    }
+}
 
+@media (max-width: 1024px) {
+    .container-main {
+        padding: 40px 20px; 
+    }
+}
+
+@media (max-width: 1200px) and (min-width: 600px) and (orientation: landscape) {
+    .title-main {
+        top: 20%;
+        left: 2%;
+        right: 5%;
+        line-height: 80px;
+        font-size: 2rem;
+    }
+}
 
 /*Diet Plan Page*/
 
