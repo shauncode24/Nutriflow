@@ -3,7 +3,7 @@ function Plans(props) {
     <>
         <div className = "plans-div" id={`plan-${props.planId}`}>
             <div className = "plans-header">
-                <div className = "plans-header-left">Plan Name</div>
+                <div className = "plans-header-left">{props.planName}</div>
                 <div className = "plans-header-status-div">
                     <div className = "plans-header-status">Active Plan</div>
                 </div>

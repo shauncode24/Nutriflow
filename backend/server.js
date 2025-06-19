@@ -85,122 +85,144 @@ app.post('/login', async (req, res) => {
 })
 
 app.post('/addfood', async (req, res) => {
-    try {
-        const { food, time, index, quantity, unit, qtychange } = req.body;    
-        
-        // Input validation
-        if (!food || !time || !quantity || !unit) {
-            return res.status(400).json({ error: 'Missing required fields' });
-        }
-        
-        const sampleQuery = `${quantity} ${unit} ${food}`;
-        console.log("sample queyr: ", sampleQuery) // Fixed: template literal syntax
-        const authHeader = req.headers.authorization;
-        
-        if (!authHeader) {
-            return res.status(401).json({ error: 'Authorization header missing' });
-        }
-        
-        const token = authHeader.split(" ")[1];
+  try {
+    const { food, time, index, quantity, unit, qtychange } = req.body;
 
-        const decoded = jwt.verify(token, JWT_SECRET);
-        const userId = decoded.username;
-
-        let noOfMeals;
-
-        if (index !== undefined && index != null) {
-            noOfMeals = index;
-            console.log("mycode")
-        } else {
-            const result = await pool.query("SELECT plans FROM login WHERE id = $1", [userId]);
-            noOfMeals = result.rows[0]?.plans || 0; // Added null check
-        }
-
-        const response = await axios.post(
-            'https://trackapi.nutritionix.com/v2/natural/nutrients',
-            {
-                query: sampleQuery
-            },
-            {
-                headers: {
-                    'x-app-id': appId,
-                    'x-app-key': appKey
-                }
-            }
-        );
-
-        const nutritionData = response.data.foods[0];
-        const nutritionDetails = {
-            name: nutritionData.food_name,
-            calories: nutritionData.nf_calories,
-            fat: nutritionData.nf_total_fat,
-            protein: nutritionData.nf_protein,
-            carbs: nutritionData.nf_total_carbohydrate,
-        };
-        console.log(nutritionDetails);
-
-        console.log("UserID", userId);
-        console.log("qtychange: ", qtychange);
-
-        const indFood = {
-            "userId": userId,
-            "plan_id": noOfMeals,
-            "meal_type": time,
-            "food": food,
-            "calories": nutritionDetails.calories,
-            "fats": nutritionDetails.fat,
-            "proteins": nutritionDetails.protein,
-            "carbs": nutritionDetails.carbs,
-            "quantity": quantity,
-            "quantity_unit": unit
-        }
-
-        if (!foods[userId]) {
-            foods[userId] = []
-        }
-
-        if (qtychange === null || qtychange === undefined) { // Fixed condition
-            indFood.id = Date.now();
-            foods[userId].push(indFood);
-            console.log(foods);
-        } else {
-            if (index) {
-  // Update DB meal row
-  await pool.query(
-    `UPDATE meals 
-     SET calories = $1, proteins = $2, carbs = $3, fats = $4, 
-         quantity = $5, quantity_unit = $6 
-     WHERE id = $7 AND plan_id = $8 AND user_id = $9`,
-    [
-      indFood.calories,
-      indFood.proteins,
-      indFood.carbs,
-      indFood.fats,
-      indFood.quantity,
-      indFood.quantity_unit,
-      qtychange,
-      index,
-      userId
-    ]
-  );
-  console.log(`🔁 Updated meal in DB with id=${qtychange}`);
-} else {
-  // In-memory edit
-  foods[userId] = foods[userId].map(f =>
-    f.id === qtychange ? { ...indFood, id: qtychange } : f
-  );
-  console.log(`🧠 Updated draft meal in memory`);
-}
-
-        }
-
-        res.status(200).json({ message: 'Food added successfully' });
-
-    } catch (error) {
-        console.error('Add food error:', error.message);
-        res.status(500).json({ error: 'Failed to fetch nutrition data' });
+    // Input validation
+    if (!food || !time || !quantity || !unit) {
+      return res.status(400).json({ error: 'Missing required fields' });
     }
+
+    const sampleQuery = `${quantity} ${unit} ${food}`;
+    console.log("sample query: ", sampleQuery);
+
+    const authHeader = req.headers.authorization;
+    if (!authHeader) {
+      return res.status(401).json({ error: 'Authorization header missing' });
+    }
+
+    const token = authHeader.split(" ")[1];
+    const decoded = jwt.verify(token, JWT_SECRET);
+    const userId = decoded.username;
+
+    // Determine plan id
+    let planId;
+    if (index !== undefined && index !== null) {
+      planId = index;
+    } else {
+      const result = await pool.query("SELECT plans FROM login WHERE id = $1", [userId]);
+      planId = result.rows[0]?.plans || 0;
+    }
+
+    // Fetch nutrition data
+    const response = await axios.post(
+      'https://trackapi.nutritionix.com/v2/natural/nutrients',
+      { query: sampleQuery },
+      {
+        headers: {
+          'x-app-id': appId,
+          'x-app-key': appKey
+        }
+      }
+    );
+
+    const nutritionData = response.data.foods[0];
+    const nutritionDetails = {
+      name: nutritionData.food_name,
+      calories: nutritionData.nf_calories,
+      fat: nutritionData.nf_total_fat,
+      protein: nutritionData.nf_protein,
+      carbs: nutritionData.nf_total_carbohydrate,
+    };
+
+    console.log("UserID:", userId);
+    console.log("qtychange:", qtychange);
+
+    const indFood = {
+      userId: userId,
+      plan_id: planId,
+      meal_type: time,
+      food: food,
+      calories: nutritionDetails.calories,
+      fats: nutritionDetails.fat,
+      proteins: nutritionDetails.protein,
+      carbs: nutritionDetails.carbs,
+      quantity: quantity,
+      quantity_unit: unit
+    };
+
+    // Initialize in-memory storage if needed
+    if (!foods[userId]) {
+      foods[userId] = [];
+    }
+
+    if (qtychange !== undefined && qtychange !== null) {
+      // 🔄 Update existing item
+      if (index !== undefined && index !== null) {
+        // 🟡 Update in DB
+        await pool.query(
+          `UPDATE meals 
+           SET calories = $1, proteins = $2, carbs = $3, fats = $4, 
+               quantity = $5, quantity_unit = $6 
+           WHERE id = $7 AND plan_id = $8 AND user_id = $9`,
+          [
+            indFood.calories,
+            indFood.proteins,
+            indFood.carbs,
+            indFood.fats,
+            indFood.quantity,
+            indFood.quantity_unit,
+            qtychange,
+            planId,
+            userId
+          ]
+        );
+        console.log(`🔁 Updated meal in DB with id=${qtychange}`);
+      } else {
+        // 🧠 Update draft (in-memory)
+        foods[userId] = foods[userId].map(f =>
+          f.id === qtychange ? { ...indFood, id: qtychange } : f
+        );
+        console.log(`🧠 Updated draft meal in memory with id=${qtychange}`);
+      }
+    } else {
+      // ➕ Add new item
+      if (index !== undefined && index !== null) {
+        // Save to DB
+        const result = await pool.query(
+          `INSERT INTO meals 
+           (user_id, plan_id, meal_type, food, calories, fats, proteins, carbs, quantity, quantity_unit)
+           VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+           RETURNING id`,
+          [
+            userId,
+            planId,
+            time,
+            food,
+            nutritionDetails.calories,
+            nutritionDetails.fat,
+            nutritionDetails.protein,
+            nutritionDetails.carbs,
+            quantity,
+            unit
+          ]
+        );
+        console.log("🆕 Inserted new food with id:", result.rows[0].id);
+      } else {
+        // Add to in-memory
+        indFood.id = Date.now(); // Assign unique ID for frontend
+        foods[userId].push(indFood);
+        console.log("🧠 Added new draft food:", indFood);
+      }
+    }
+
+    res.status(200).json({ message: 'Food added or updated successfully' });
+  } catch (error) {
+    console.error('Add food error:', error.message);
+    res.status(500).json({ error: 'Failed to add or update food' });
+  }
 });
+
 
 app.get('/getfood', async (req, res) => {
     try {
@@ -241,7 +263,7 @@ app.post('/addMeal', async (req, res) => {
         }
         
         const token = authHeader.split(' ')[1];
-        const { calories, proteins, carbs, fats, selectedPlanId } = req.body;
+        const { calories, proteins, carbs, fats, selectedPlanId ,planName} = req.body;
         
         const decoded = jwt.verify(token, JWT_SECRET);
         const userId = decoded.username;   
@@ -253,13 +275,13 @@ app.post('/addMeal', async (req, res) => {
         let noOfIndividualMeals = maxMealResult.rows[0]?.max || 0;
 
         if (selectedPlanId !== undefined && selectedPlanId !== null) {
-            await pool.query('UPDATE individualmeals SET calories = $1, proteins = $2, carbs = $3, fats = $4 WHERE meal_id = $5 AND user_id = $6', 
-                [calories, proteins, carbs, fats, selectedPlanId, userId]);
+            await pool.query('UPDATE individualmeals SET calories = $1, proteins = $2, carbs = $3, fats = $4, plan_name = $5 WHERE meal_id = $6 AND user_id = $7', 
+                [calories, proteins, carbs, fats, planName, selectedPlanId, userId]);
             console.log("userid mealid", userId, selectedPlanId);
             console.log("in the condition")
         } else {
-            await pool.query('INSERT INTO individualmeals(user_id, meal_id, calories, proteins, carbs, fats) VALUES ($1, $2, $3, $4, $5, $6)', 
-                [userId, noOfMeals - 1, calories, proteins, carbs, fats]);
+            await pool.query('INSERT INTO individualmeals(user_id, meal_id, calories, proteins, carbs, fats, plan_name) VALUES ($1, $2, $3, $4, $5, $6, $7)', 
+                [userId, noOfMeals - 1, calories, proteins, carbs, fats, planName]);
 
             await pool.query('UPDATE login SET plans = $1 WHERE id = $2', [noOfMeals, userId])
         }
@@ -407,6 +429,9 @@ app.get('/getplan/:planId', async (req, res) => {
         );
 
         const rows = result.rows;
+        
+        let planName = await pool.query("SELECT plan_name FROM individualmeals WHERE meal_id  = $1", [planId]);
+        planName = planName.rows[0].plan_name
 
         // 🧠 Fill foods[userId] in memory with what's in this plan
         foods[userId] = rows.map(row => ({
@@ -424,7 +449,7 @@ app.get('/getplan/:planId', async (req, res) => {
         }));
 
         console.log(`Draft foods set for user ${userId} from plan ${planId}`);
-        res.status(200).json(rows);
+        res.status(200).json({items: rows, name:planName });
 
     } catch (err) {
         console.error('Get plan error:', err.message);

@@ -25,6 +25,7 @@ function DietPlan() {
     });
     const [planSelected, setPlanSelected] = React.useState(0);
     const [selectedPlanId, setSelectedPlanId] = React.useState(null);
+    const [planName, setPlanName] = React.useState('')
 
     // Quantity and Unit States for each meal
     const [qtyChanged, setQtyChange] = React.useState(null);
@@ -50,6 +51,7 @@ function DietPlan() {
                 }
             });
             setPlans(res.data)
+            console.log("incoming plans data: " + JSON.stringify(res.data))
         }catch (err) {
             console.error("Error fetching plans: ", err);
         }
@@ -138,7 +140,7 @@ function DietPlan() {
     if (calories === 0 && proteins === 0 && carbs === 0 && fats === 0) return;
     try {
         await axios.post('http://localhost:5000/addMeal',
-            { calories, proteins, carbs, fats, selectedPlanId },
+            { calories, proteins, carbs, fats, selectedPlanId, planName },
             {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -189,7 +191,7 @@ const refreshAddedFoodAndTotals = async () => {
 
         let totalCals = 0, totalProt = 0, totalCarb = 0, totalFat = 0;
 console.log("foods length:", foods.length);
-        for (const item of foods) {
+        for (const item of foods.items) {
             const pairItem = {
                 food: item.food,
                 index: item.id,
@@ -226,16 +228,24 @@ console.log("foods length:", foods.length);
 };
 
 
-    const handleSubmit = async (meal, food, quantity, unit) => {
-        try {
-            const res = await axios.post('http://localhost:5000/addfood', 
-            {time: meal, food: food, index: selectedPlanId, quantity: quantity, unit: unit, qtychange: qtyChanged},
+const handleSubmit = async (meal, food, quantity, unit) => {
+    try {
+        const res = await axios.post('http://localhost:5000/addfood', 
+            {
+                time: meal,
+                food: food,
+                index: selectedPlanId,   // plan_id
+                quantity: quantity,
+                unit: unit,
+                qtychange: qtyChanged !== null ? qtyChanged : undefined  // 🔧 Make sure it's undefined if not set
+            },
             {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`
                 }
             }
         );
+
 
         console.log("frontend handlesubmit12345: ", qtyChanged)
 
@@ -316,7 +326,8 @@ console.log("foods length:", foods.length);
             Snack: []
         };
 
-        const foods = res.data;
+        const foods = res.data.items;
+        setPlanName(res.data.name);
 
         // ✅ Defensive: If no foods, reset state to empty
         if (!foods || foods.length === 0) {
@@ -409,14 +420,22 @@ console.log("foods length:", foods.length);
 
                     <div className = "plan-main-section-body">
                         {plans.map((plan) => (
-                            <Plans key = {plan.meal_id} calories = {plan.calories} proteins = {plan.proteins} created = {plan.created_at} planId = {plan.meal_id} deletePlan = {(planId) => handlePlanDelete(planId)} onClick = {() => handlePlanClick(plan.meal_id)}/>
+                            <Plans key = {plan.meal_id} calories = {plan.calories} proteins = {plan.proteins} created = {plan.created_at} planId = {plan.meal_id} planName = { plan.plan_name } deletePlan = {(planId) => handlePlanDelete(planId)} onClick = {() => handlePlanClick(plan.meal_id)}/>
                         ))}
                     </div>
                 </div>
             
                 {(showNewPlan || selectedPlanId) && (
                 <div className = "new-plan-div">
-                    <div className = "new-plan-title">Weekly Diet Planner</div>
+                    <div className = "new-plan-title">Weekly Diet Planner
+                          <input 
+    type="text" 
+    value={planName} 
+    onChange={(e) => setPlanName(e.target.value)} 
+    placeholder="Enter plan name"
+  />
+
+                    </div>
                     <div className = "new-plan-days-div">
                         <div className = "new-plan-day-div">Monday</div>
                         <div className = "new-plan-day-div">Tuesday</div>

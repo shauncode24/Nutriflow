@@ -577,7 +577,7 @@ a {
 .plan-header {
     height: 120px;
     width: 100%;
-    background-color: #A8B89E;
+    background: linear-gradient(to right, #d6edbc 0%, #c5e58f 15%, #b0ea72 35%, #b0ea72 65%, #c5e58f 90%, #d6edbc 100%);
     font-family: "Outfit", sans-serif;
     gap: 5%;
 }
