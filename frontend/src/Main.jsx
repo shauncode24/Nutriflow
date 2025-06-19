@@ -10,6 +10,25 @@ import {Link} from 'react-router-dom'
 function Main() {
     const [msg, setMsg] = useState("");
     const[isPortrait, setIsPortrait] = useState(window.matchMedia("(orientation: portrait)").matches);
+    const [username, setUsername] = useState("");
+
+    useEffect(() => {
+      const fetchUsername = async () => {
+        try {
+          const res = await axios.get('http://localhost:5000/getusername', {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
+          });
+          setUsername(res.data.name); // ✅ Access `name` from the response
+        } catch (err) {
+          console.error("Error fetching username:", err);
+        }
+      };
+
+      fetchUsername();
+    }, []);
+
 
     useEffect(() => {
     const handler = (e) => setIsPortrait(e.matches);
@@ -35,7 +54,7 @@ function Main() {
             <div className="content">
               <div className="hero-main">
                 <img src = {isPortrait ? portraitPhoto : herophoto} alt = "food" width = "100%" style={{position: 'relative', top: '0', left: '0'}} />
-                <div className="title-main">Hey User,<br />Let's get started!</div>
+                <div className="title-main">Hey {username || "User"},<br />Let's get started!</div>
               </div>
 
               <div className = "container-main">

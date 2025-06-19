@@ -452,6 +452,19 @@ app.post('/clearfoods', (req, res) => {
   }
 });
 
+app.get('/getusername', async (req, res) => {
+    const authHeader = req.headers.authorization;
+    if (!authHeader) return res.status(401).json({ error: "No token" })
+    const token = authHeader.split(" ")[1];
+    const decoded = jwt.verify(token, JWT_SECRET);
+    const userId = decoded.username;
+
+    var username = await pool.query('SELECT username FROM login WHERE id = $1', [userId]);
+    username = username.rows[0].username;
+
+    res.json( {name: username} );
+})
+
 
 app.listen(5000, () => {
     console.log('Server is listening on port 5000');
