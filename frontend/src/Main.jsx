@@ -6,6 +6,7 @@ import herophoto from './photos/photo-main3.jpg';
 import portraitPhoto from './photos/photo-main2.jpg';
 import Card from "./components/Cards";
 import {Link} from 'react-router-dom'
+import Sidebar from "./components/Sidebar";
 
 function Main() {
     const [msg, setMsg] = useState("");
@@ -42,14 +43,7 @@ function Main() {
 
     return (<>
         <div className="main-body">
-            <div className="sidebar">
-              <div className = "optionsdiv">
-                <div className= "option">opiton1</div>
-                <div className= "option">option2</div>
-                <div className= "option">option3</div>
-                <div className= "option">option4</div>
-              </div>
-            </div>
+            <Sidebar />
 
             <div className="content">
               <div className="hero-main">

@@ -35,6 +35,7 @@ body {
     margin: 0;
     padding: 0;
     overflow-x: hidden;
+    padding-top: 100px;
 }
 
 .body-div, .homepage-body, .main-body, .plan-body {
@@ -60,7 +61,7 @@ body {
 }
 
 .plan-body {
-    background-color: #ecfde0;
+    background-color: #EAFCE9;
     overflow-x: hidden;
     display: flex;
     flex-direction: column;
@@ -372,6 +373,11 @@ body {
     background: linear-gradient(to right, #d6edbc 0%, #c5e58f 15%, #b0ea72 35%, #b0ea72 65%, #c5e58f 90%, #d6edbc 100%);
     color: #215624;
     letter-spacing: 1px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
 }
 
 .optionsdiv {
@@ -574,12 +580,19 @@ a {
 
 /*Diet Plan Page*/
 
+.plan-body {
+    background: linear-gradient(to bottom, #EAFCE9 30%, #CFF6C8);;
+}
+
 .plan-header {
-    height: 120px;
+    height: 150px;
     width: 100%;
-    background: linear-gradient(to right, #d6edbc 0%, #c5e58f 15%, #b0ea72 35%, #b0ea72 65%, #c5e58f 90%, #d6edbc 100%);
+    /* background: linear-gradient(to right, #d6edbc 0%, #c5e58f 15%, #b0ea72 35%, #b0ea72 65%, #c5e58f 90%, #d6edbc 100%); */
+    /* background: linear-gradient(to right, #B5E48C , #99D98C); */
+    background-color: #EAFCE9;
     font-family: "Outfit", sans-serif;
     gap: 5%;
+    border-bottom: 1px solid #c6d4c5;
 }
 
 .plan-header-title {
@@ -605,6 +618,7 @@ a {
     justify-content: flex-start;
     padding: 0px 20px;
     margin-top: 30px;
+    /* border-bottom: 1px solid black; */
 }
 
 .plan-main-section-header {
@@ -618,7 +632,7 @@ a {
 .plan-main-section-title {
     width: 75%;
     height: 100%;
-    font-size: 1.9rem;
+    font-size: 2rem;
     align-items: flex-start;
     font-weight: 500;
 }

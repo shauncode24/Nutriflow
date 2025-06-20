@@ -107,7 +107,9 @@ app.post('/addfood', async (req, res) => {
 
     // Determine plan id
     let planId;
-    if (index !== undefined && index !== null) {
+    const isEditingExistingPlan = index !== undefined && index !== null;
+    
+    if (isEditingExistingPlan) {
       planId = index;
     } else {
       const result = await pool.query("SELECT plans FROM login WHERE id = $1", [userId]);
@@ -137,6 +139,7 @@ app.post('/addfood', async (req, res) => {
 
     console.log("UserID:", userId);
     console.log("qtychange:", qtychange);
+    console.log("isEditingExistingPlan:", isEditingExistingPlan);
 
     const indFood = {
       userId: userId,
@@ -151,16 +154,16 @@ app.post('/addfood', async (req, res) => {
       quantity_unit: unit
     };
 
-    // Initialize in-memory storage if needed
-    if (!foods[userId]) {
-      foods[userId] = [];
-    }
+    console.log("=== UPDATE ATTEMPT? ===");
+    console.log("qtychange (food ID):", qtychange);
+    console.log("planId:", planId);
+    console.log("userId:", userId);
 
     if (qtychange !== undefined && qtychange !== null) {
       // 🔄 Update existing item
-      if (index !== undefined && index !== null) {
-        // 🟡 Update in DB
-        await pool.query(
+      if (isEditingExistingPlan) {
+        // 🟡 Update directly in DB (no in-memory storage)
+        const updateResult = await pool.query(
           `UPDATE meals 
            SET calories = $1, proteins = $2, carbs = $3, fats = $4, 
                quantity = $5, quantity_unit = $6 
@@ -177,9 +180,12 @@ app.post('/addfood', async (req, res) => {
             userId
           ]
         );
-        console.log(`🔁 Updated meal in DB with id=${qtychange}`);
+        console.log(`🔁 Updated meal in DB with id=${qtychange}, rows affected: ${updateResult.rowCount}`);
       } else {
-        // 🧠 Update draft (in-memory)
+        // 🧠 Update draft (in-memory) - only for new plans
+        if (!foods[userId]) {
+          foods[userId] = [];
+        }
         foods[userId] = foods[userId].map(f =>
           f.id === qtychange ? { ...indFood, id: qtychange } : f
         );
@@ -187,8 +193,8 @@ app.post('/addfood', async (req, res) => {
       }
     } else {
       // ➕ Add new item
-      if (index !== undefined && index !== null) {
-        // Save to DB
+      if (isEditingExistingPlan) {
+        // 🟡 Save directly to DB (no in-memory storage)
         const result = await pool.query(
           `INSERT INTO meals 
            (user_id, plan_id, meal_type, food, calories, fats, proteins, carbs, quantity, quantity_unit)
@@ -207,12 +213,15 @@ app.post('/addfood', async (req, res) => {
             unit
           ]
         );
-        console.log("🆕 Inserted new food with id:", result.rows[0].id);
+        console.log("🟡 Inserted new food directly to DB with id:", result.rows[0].id);
       } else {
-        // Add to in-memory
+        // 🧠 Add to in-memory (only for new plans)
+        if (!foods[userId]) {
+          foods[userId] = [];
+        }
         indFood.id = Date.now(); // Assign unique ID for frontend
         foods[userId].push(indFood);
-        console.log("🧠 Added new draft food:", indFood);
+        console.log("🧠 Added new draft food to memory:", indFood);
       }
     }
 
@@ -267,6 +276,8 @@ app.post('/addMeal', async (req, res) => {
         
         const decoded = jwt.verify(token, JWT_SECRET);
         const userId = decoded.username;   
+
+        console.log("Received selectedPlanId:", selectedPlanId);
              
         const plansResult = await pool.query("SELECT plans FROM login WHERE id = $1", [userId]);
         const maxMealResult = await pool.query("SELECT MAX(meal_id) FROM individualmeals WHERE user_id = $1", [userId]);
@@ -287,11 +298,14 @@ app.post('/addMeal', async (req, res) => {
         }
 
         if (foods[userId] && Array.isArray(foods[userId])) {
+            const targetPlanId = (selectedPlanId !== undefined && selectedPlanId !== null)
+            ? selectedPlanId
+            : noOfMeals - 1;
             for (const item of foods[userId]) {
                 await pool.query('INSERT INTO meals(user_id, plan_id, meal_type, food, calories, fats, proteins, carbs, quantity, quantity_unit) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)',
                     [
                         userId,
-                        noOfMeals - 1,
+                        targetPlanId,
                         item.meal_type,
                         item.food,
                         item.calories,
@@ -430,26 +444,20 @@ app.get('/getplan/:planId', async (req, res) => {
 
         const rows = result.rows;
         
-        let planName = await pool.query("SELECT plan_name FROM individualmeals WHERE meal_id  = $1", [planId]);
-        planName = planName.rows[0].plan_name
+        let planName = await pool.query("SELECT plan_name FROM individualmeals WHERE meal_id = $1", [planId]);
+        planName = planName.rows[0].plan_name;
 
-        // 🧠 Fill foods[userId] in memory with what's in this plan
-        foods[userId] = rows.map(row => ({
-            id: row.id,  // use actual db ID for later edits/deletes
-            userId: row.user_id,
-            plan_id: row.plan_id,
-            meal_type: row.meal_type,
-            food: row.food,
-            calories: row.calories,
-            fats: row.fats,
-            proteins: row.proteins,
-            carbs: row.carbs,
-            quantity: row.quantity,
-            quantity_unit: row.quantity_unit
-        }));
+        // ❌ DON'T populate in-memory storage when editing existing plans
+        // This was causing duplicates because these foods were being re-inserted
+        
+        // 🧠 Only clear any existing draft foods to avoid confusion
+        if (foods[userId]) {
+            delete foods[userId];
+            console.log(`Cleared any existing draft foods for user ${userId} when loading plan ${planId}`);
+        }
 
-        console.log(`Draft foods set for user ${userId} from plan ${planId}`);
-        res.status(200).json({items: rows, name:planName });
+        console.log(`Returning existing plan ${planId} data directly from DB (not populating memory)`);
+        res.status(200).json({items: rows, name: planName});
 
     } catch (err) {
         console.error('Get plan error:', err.message);

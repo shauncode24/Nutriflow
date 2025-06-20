@@ -5,6 +5,7 @@ import NewPlanDivs from "./components/NewPlanDivs";
 import Quantities from "./components/Quantities";
 import Plans from "./components/Plans";
 import { Link } from "react-router-dom";
+import Sidebar from "./components/Sidebar";
 
 function DietPlan() {
     const [breakfast, setBreakfast] = React.useState('');
@@ -237,7 +238,7 @@ const handleSubmit = async (meal, food, quantity, unit) => {
                 index: selectedPlanId,   // plan_id
                 quantity: quantity,
                 unit: unit,
-                qtychange: qtyChanged !== null ? qtyChanged : undefined  // 🔧 Make sure it's undefined if not set
+                qtychange: qtyChanged  // 🔧 Make sure it's undefined if not set
             },
             {
                 headers: {
@@ -386,10 +387,13 @@ const handleSubmit = async (meal, food, quantity, unit) => {
     return(
         <>
             <div className="plan-body">
+                <Sidebar />
                 <div className = "plan-header">
                     <div className="plan-header-title">Create Your Personal Diet Plan</div>
                     <div className="plan-header-subtitle">Design a customized meal plan that fits your lifestyle and goals</div>
                 </div>
+
+                {(!showNewPlan && !selectedPlanId) && (
 
                 <div className = "plan-main-section">
                     <div className = "plan-main-section-header">
@@ -424,7 +428,8 @@ const handleSubmit = async (meal, food, quantity, unit) => {
                         ))}
                     </div>
                 </div>
-            
+                )}
+
                 {(showNewPlan || selectedPlanId) && (
                 <div className = "new-plan-div">
                     <div className = "new-plan-title">Weekly Diet Planner
@@ -436,7 +441,7 @@ const handleSubmit = async (meal, food, quantity, unit) => {
   />
 
                     </div>
-                    <div className = "new-plan-days-div">
+                    {/* <div className = "new-plan-days-div">
                         <div className = "new-plan-day-div">Monday</div>
                         <div className = "new-plan-day-div">Tuesday</div>
                         <div className = "new-plan-day-div">Wednesday</div>
@@ -444,7 +449,7 @@ const handleSubmit = async (meal, food, quantity, unit) => {
                         <div className = "new-plan-day-div">Friday</div>
                         <div className = "new-plan-day-div">Saturday</div>
                         <div className = "new-plan-day-div">Sunday</div>
-                    </div>
+                    </div> */}
                     <div className = "new-plan-divisions">
                         <NewPlanDivs title = "Breakfast" image = "https://www.svgrepo.com/show/1877/fried-egg.svg" food = {breakfast} setFood = {setBreakfast} onSubmit = {(qty, unit) => {handleSubmit("Breakfast", breakfast, qty, unit); setQtyChange(null)}} added = {addedFood.Breakfast} onDelete = {(item) => handleDelete("Breakfast", item)} onEdit = {(id) => setQtyChange(id)}/>
                         <NewPlanDivs title = "Lunch" image = "https://www.svgrepo.com/show/503649/lunch.svg" food = {lunch} setFood = {setLunch} onSubmit = {(qty, unit) => {handleSubmit("Lunch", lunch, qty, unit); setQtyChange(null)}} added = {addedFood.Lunch} onDelete = {(item) => handleDelete("Lunch", item)} onEdit = {(id) => setQtyChange(id)}/>
