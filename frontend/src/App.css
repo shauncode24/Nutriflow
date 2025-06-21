@@ -23,7 +23,7 @@ body {
     overflow-x: hidden;
 }
 
-.body-div, .container, .left, .right, .input-div, .input-label, .input-field-div, .input-field, .main-label, .submit-div, .extras, .submit-button, .extras-left ,.extras-right, .right-content, .welcome, .mid-text, .sign-in-div, .sign-in-button, .homepage-body, .herosection, .right-section, .left-section, .herosection-title, .herosection-subtitle, .herosection-button, .herobutton, .main-body, .sidebar, .content, .optionsdiv, .option, .container-main, .hero-main, .internal-main, .footer-main, .card-image-div, .card-title, .card-description, .card-button, .plan-header, .plan-main-section, .plan-main-section-header, .plan-main-section-title, .plan-main-section-button-div, .plan-main-section-button, .plan-main-section-body, .plans-div, .plans-header, .plans-header-left, .plans-header-status-div, .plans-header-status, .plans-header-right, .plans-header-right-icons, .plans-body, .target-nuts, .target-nuts-left, .target-nuts-right, .new-plan-div, .daily-summary-div, .new-plan-title, .new-plan-days-div, .new-plan-day-div, .new-plan-divisions, .plan-divisions, .plan-upper, .plan-divisions-image, .plan-divisions-title, .plan-divisions-search-div, .search-foods, .plan-divisions-display-div, .inner-text, .daily-summary-header, .daily-summary-img, .daily-summary-title, .daily-summary-body, .daily-summary-footer, .daily-summary-body-div, .daily-summary-body-div-title, .daily-summary-body-div-content, .daily-summary-footer-btn, .plan-header-title, .plan-header-subtitle {
+.body-div, .container, .left, .right, .input-div, .input-label, .input-field-div, .input-field, .main-label, .submit-div, .extras, .submit-button, .extras-left ,.extras-right, .right-content, .welcome, .mid-text, .sign-in-div, .sign-in-button, .homepage-body, .herosection, .right-section, .left-section, .herosection-title, .herosection-subtitle, .herosection-button, .herobutton, .main-body, .sidebar, .content, .optionsdiv, .option, .container-main, .hero-main, .internal-main, .footer-main, .card-image-div, .card-title, .card-description, .card-button, .plan-header, .plan-main-section, .plan-main-section-header, .plan-main-section-title, .plan-main-section-button-div, .plan-main-section-button, .plan-main-section-body, .plans-div, .plans-header, .plans-header-left, .plans-header-status-div, .plans-header-status, .plans-header-right, .created-on-div, .action-buttons, .icons, .plans-body, .target-nuts, .target-nuts-left, .target-nuts-right, .new-plan-div, .daily-summary-div, .new-plan-title, .new-plan-days-div, .new-plan-day-div, .new-plan-divisions, .plan-divisions, .plan-upper, .plan-divisions-image, .plan-divisions-title, .plan-divisions-search-div, .search-foods, .plan-divisions-display-div, .inner-text, .daily-summary-header, .daily-summary-img, .daily-summary-title, .daily-summary-body, .daily-summary-footer, .daily-summary-body-div, .daily-summary-body-div-title, .daily-summary-body-div-content, .daily-summary-footer-btn, .plan-header-title, .plan-header-subtitle, .new-plan-heading, .plan-name-div, .plan-name, .food-item, .food-name, .food-qtys, .food-li, .remove-btn, .edit-btn, .food-list, .quantity-input, .unit-select, .submit {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -584,6 +584,8 @@ a {
     background: linear-gradient(to bottom, #EAFCE9 30%, #CFF6C8);;
 }
 
+
+
 .plan-header {
     height: 150px;
     width: 100%;
@@ -613,7 +615,7 @@ a {
 }
 
 .plan-main-section {
-    height: 350px;
+    height: 450px;
     width: fit-content;
     justify-content: flex-start;
     padding: 0px 20px;
@@ -623,7 +625,7 @@ a {
 
 .plan-main-section-header {
     width: 100%;
-    height: 17%;
+    height: 25%;
     flex-direction: row;
     font-family: "Outfit", sans-serif;
     justify-content: flex-start;
@@ -640,12 +642,13 @@ a {
 .plan-main-section-button-div {
     width: 25%;
     height: 100%;
+    align-items: flex-end;
 }
 
 .plan-main-section-button {
-    width: 100%;
-    height: 100%;
-    background-color: #2dd44f;
+    width: 90%;
+    height: 50%;
+    background-color: #0D9C5A;
     border: none;
     border: 1px solid  #208d36;
     border-radius: 15px;
@@ -664,9 +667,8 @@ a {
 }
 
 .plan-main-section-body {
-    height: 80%;
-    width: 1230px;
-    /* background-color: #ebeaea; */
+    height: 70%;
+    width: 1200px;
     flex-direction: row;
     justify-content: flex-start;
     gap: 20px;
@@ -676,9 +678,9 @@ a {
 
 
 .plans-div {
-    width: 600px;
-    height: 230px;
-    background-color: #ffffff;
+    width: 1200px;
+    height: 98%;
+    background-color: #FBFFFD;
     border-radius: 15px;
     border: 2px solid #dadada;
     justify-content: flex-start;
@@ -693,104 +695,248 @@ a {
     height: 25%;
     flex-direction: row;
     justify-content: flex-start;
-    gap: 20px
+    gap: 20px;
 }
 
+/* * {
+    outline: 1px solid red;
+} */
+
 .plans-header-left {
-    width: 20%;
+    width: 80%;
     height: 100%;
+    flex-direction: column;
     align-items: flex-start;
-    font-size: 1.3rem;
+    justify-content: flex-end;
+    font-size: 1.6rem;
     letter-spacing: 0.5px;
+    gap: 5px
+}
+
+.subheading-main-meal {
+    font-size: 0.9rem;
+    color: #8d8d8d;
+    font-weight: 300;
 }
 
 .plans-header-status-div {
-    width: 40%;
+    width: 25%;
     height: 100%;
-    align-items: flex-start;
+    align-items: flex-end;
 }
+/* 
+* {
+    outline: 1px solid red;
+} */
 
 .plans-header-status {
     height: 50%;
     width: fit-content;
-    background-color: #22C55E;
-    padding: 0px 8px;
+    background-color: #dcfce7;
+    padding: 0px 10px;
     border-radius: 15px;
-    color: white;
+    color: #15803d;
     font-weight: 300;
     font-size: 0.8rem;
 }
 
 .plans-header-right {
-    width: 35%;
-    height: 100%;
-    flex-direction: row;
-    gap: 20px;
-    justify-content: flex-end
+    width: 100%;
+    height: 25%;
+    flex-direction: column;
+    gap: 10px;
+    justify-content: flex-end;
 }
 
-.plans-header-right-icons {
-    width: 25px;
-    height: 25px;
+.created-on-div {
+    width: 100%;
+    height: 40%;
+    align-items: flex-start;
+}
+
+.action-buttons {
+    flex-direction: row;
+    width: 100%;
+    height: 50%;
+    gap: calc(5%/3);
+}
+    
+.icons {
+    flex-direction: row;
+    gap: 10px;
+    font-weight: 500;
+    border-radius: 7px;
+    cursor: pointer;
+    transition: all 0.4s ease;
+}
+
+.plans-header-right-icons-1 {
+    width: 40%;
+    height: 100%;
+    background-color: #e6f8f0;
+    color: #429A63;
+}
+
+.plans-header-right-icons-1:hover {
+    background-color: #bbf7d0;
+}
+
+.plans-header-right-icons-2 {
+    width: 10%;
+    height: 100%;
+    background-color: #fcfaea;
+    color: #c09146;
+}
+
+.plans-header-right-icons-2:hover {
+    background-color: #fef9c3;
+}
+
+.plans-header-right-icons-3 {
+    width: 5%;
+    height: 100%;
+    background-color: #fce9eb;
+    color: #B91C1C;
+}
+
+.plans-header-right-icons-3:hover {
+    background-color: #fee2e2;
+}
+
+.plans-header-right-icons-4 {
+    width: 40%;
+    height: 100%;
+    background-color: #ebedfc;
+    color: #3663DD;
+}
+
+.plans-header-right-icons-4:hover {
+    background-color: #dbeafe;
 }
 
 .plans-body {
     width: 100%;
-    height: 70%;
+    height: 50%;
     gap: 10px;
+    flex-direction: row;
+
 }
 
 .target-nuts {
     width: 100%;
-    height: 20%;
-    flex-direction: row;
+    height: 70%;
+    flex-direction: column;
     justify-content: space-between;
+    border-radius: 10px;
+}
+
+.cal {
+    background-color: #f1ebfa;
+}
+
+.left-cal {
+    color: #9F4AEC;
+}
+
+.right-cal {
+    color: #6b21a8;
+}
+
+.prot {
+    background-color: #e9f1fc;
+}
+
+.left-prot {
+    color: #0ea5e9;
+}
+
+.right-prot {
+    color: #1E40AF;
+}
+
+.carbs {
+    background-color: #fef3e9;
+}
+
+.left-carbs {
+    color: #f97316;
+}
+
+.right-carbs {
+    color: #A74D2F;
 }
 
 .target-nuts-left {
-    width: 50%;
-    height: 100%;
-    align-items: flex-start;
+    width: 100%;
+    height: 50%;
     font-size: 1rem;
-    font-weight: 300;
-    color: #525757;
+    font-weight: 500;
+    justify-content: flex-end;
+    padding-bottom: 5px;
 }
 
 .target-nuts-right {
-    width: 20%;
-    height: 100%;
-    font-size: 1rem;
+    width: 100%;
+    height: 50%;
+    font-size: 1.2rem;
     font-weight: 500;
-    color: #525757;
+    justify-content: flex-start;
 }
 
 .new-plan-div {
-    height: 650px;
+    height: 900px;
     width: 75%;
     background-color: #f5f5fa;
     border: 2px solid #e7e7f0;
     border-radius: 30px;
     justify-content: flex-start;
-    padding: 20px 30px;
-    gap: 20px;
+    padding: 0px 30px 20px 30px;
+    gap: 40px;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+
 }
 
 .new-plan-title {
     width: 100%;
-    height: 8%;
+    height: 13%;
     font-family: "Outfit", sans-serif;
-    font-size: 1.8rem;
+    font-size: 2rem;
     font-weight: 500;
+    flex-direction: row;
+    border-bottom: 1px solid #d4d4d4;
+}
+
+.new-plan-heading {
+    width: 50%;
+    height: 100%;
+    align-items: center;
+}
+
+.plan-name-div {
+    width: 50%;
+    height: 70%;
     align-items: flex-start;
 }
 
-.new-plan-days-div {
+.plan-name {
+    width: 70%;
+    height: 60%;
+    border: none;
+    outline: none;
+    padding: 8px 12px;
+    background-color: transparent;
+    border-bottom: 1px solid #909090;
+    font-family: "Outfit", sans-serif;
+    font-size: 1.2rem;
+    letter-spacing: 1px;
+}
+
+/* .new-plan-days-div {
     width: 100%;
     height: 8%;
     flex-direction: row;
     gap: 10px
-}
+} */
 
 .new-plan-day-div {
     width: calc(100%/7);
@@ -806,13 +952,14 @@ a {
     border: 2px solid #a4a4e7;
 }
 
+
 .new-plan-divisions {
     display: grid;
     align-items: flex-start;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 1fr 1fr;
     width: 100%;
-    height: 80%;
+    height: 92%;
     gap: 25px;
 }
 
@@ -822,7 +969,7 @@ a {
     background-color: #F8F9FA;
     justify-content: flex-start;
     padding: 10px;
-    gap: 10px;
+    /* gap: 10px; */
     border-radius: 13px;
     border: 1px solid #d8dcdf;
 }
@@ -836,9 +983,10 @@ a {
 }
 
 .plan-divisions-image {
-    width: 5%;
-    height: 100%;
+    width: 25px;
+    height: 25px
 }
+
 
 .plan-divisions-title {
     width: 93%;
@@ -850,30 +998,140 @@ a {
     align-items: flex-start;
 }
 
-.search-foods {
-    height: 100%;
-    width: 100%;
-    border-radius: 10px;
-    border: none;
-    border: 1px solid #d1d5d8;
-    padding-left: 10px;
-    font-family: "Outfit", sans-serif;
-    outline: none;
-    font-weight: 300px;
-}
-
 .plan-divisions-search-div {
     flex-direction: row;
     width: 100%;
     height: 16%;
+    font-family: "Outfit", sans-serif;
+    gap: 5px
+}
+
+.quantity-input {
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    width: 25%;
+}
+
+.search-foods {
+    width: 100%;
+    border: none;
+    padding-left: 10px;
+    font-family: "Outfit", sans-serif;
+    outline: none;
+    font-weight: 300px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+
+.unit-select {
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    width: fit-content;
+}
+
+.submit {
+    padding: 8px 14px;
+    border: none;
+    background-color: #2f80ed;
+    color: white;
+    font-weight: 500;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-family: "Outfit", sans-serif;
+    outline: none;
+}
+
+.submit:hover {
+    background-color: #1a65cc;
 }
 
 .plan-divisions-display-div {
-    flex-direction: row;
+    /* flex-direction: row; */
     width: 100%;
-    height: 65%;
+    height: 250px;
     border: 2px dashed #bdc3c7;
     border-radius: 13px;
+    align-content: flex-start;
+    justify-content: flex-start;
+    /* background-color: #1E40AF; */
+    padding: 15px;
+    overflow-y: auto;
+}
+
+.food-list {
+    width: 100%;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    height: fit-content;
+    font-family: "Outfit", sans-serif;
+}
+
+.food-item {
+    width: 100%;
+    background-color: #d9f0ff;
+    margin-bottom: 7px;
+    border-radius: 10px;
+    padding: 5px 10px;
+    transition: all 0.2s ease;
+}
+
+.food-item:hover {
+    transform: translateY(-2px);
+}
+
+.food-li {
+    width: 100%;
+    height: 50%;
+    /* background-color: #15803d; */
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 5px 0px;
+    text-transform: capitalize;
+}
+
+.food-name {
+    width: fit-content;
+    height: fit-content;
+    flex-direction: row;
+    text-transform: none;
+    gap: 5px
+}
+
+.food-user-qty {
+    margin-right: 10px;
+    font-size: 0.9rem;
+    color: #686868;
+}
+
+.edit-btn {
+    height: fit-content;
+    width: fit-content;
+    padding: 2px;
+    margin: 0;
+    background-color: transparent;
+    border: none;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.edit-btn:hover {
+    opacity: 0.7;
+}
+
+
+.food-qtys {
+    width: 100%;
+    height: 50%;
+    align-items: flex-start;
+    padding: 2px 0px;
+    font-size: 0.8rem;
+    font-weight: 300;
+    color: #555555;
 }
 
 .inner-text {
@@ -930,9 +1188,14 @@ a {
     height: 100%;
     background-color: #F8F9FA;
     border-radius: 13px;
-    border: 1px solid #d8dcdf;
+    /* border: 1px solid #d8dcdf; */
     gap: 10px;
-    box-shadow: 0 0px 10px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+}
+
+.daily-summary-body-div:hover {
+    transform: translateY(-5px);
 }
 
 .daily-summary-body-div-title {
@@ -960,16 +1223,23 @@ a {
     width: 20%;
     height: 100%;
     border-radius: 13px;
-    border: 2px solid rgb(199, 202, 204);;
+    border: none;
     font-family: "Outfit", sans-serif;
-    background-color:#ddddfb;
+    background-color: #d1d9ff;
     font-size: 1rem;
     cursor: pointer;
     transition: all 0.5s ease;
 }
 
-.daily-summary-footer-btn:hover {
-    background-color: #a4a4e7;
-    border: 2px solid #8383e6;
-    box-shadow: 0 8px 10px rgba(0, 0, 0, 0.15);
+.final-submit {
+    background-color: #a99df0;
+    color: white;   
 }
+
+.daily-summary-footer-btn:hover {
+    background-color: #c1c8f9;
+}
+
+.final-submit:hover {
+      background-color: #8c85e0;
+    }

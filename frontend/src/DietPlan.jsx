@@ -180,7 +180,7 @@ const refreshAddedFoodAndTotals = async () => {
             });
 
         const foods = res1.data;
-        console.log(foods);
+        console.log("returned foods: ", foods);
 
         const groupedFoods = {
             Breakfast: [],
@@ -191,30 +191,58 @@ const refreshAddedFoodAndTotals = async () => {
 
 
         let totalCals = 0, totalProt = 0, totalCarb = 0, totalFat = 0;
-console.log("foods length:", foods.length);
-        for (const item of foods.items) {
-            const pairItem = {
-                food: item.food,
-                index: item.id,
-                calories: Number(item.calories) || 0,
-                proteins: Number(item.proteins) || 0,
-                carbs: Number(item.carbs) || 0,
-                fats: Number(item.fats) || 0,
-                quantity: item.quantity || '1',
-                unit: item.quantity_unit || 'g'
-            };
+        console.log("foods length:", foods.length);
+        if (planSelected) {
+            for (const item of foods.items) {
+                const pairItem = {
+                    food: item.food,
+                    index: item.id,
+                    calories: Number(item.calories) || 0,
+                    proteins: Number(item.proteins) || 0,
+                    carbs: Number(item.carbs) || 0,
+                    fats: Number(item.fats) || 0,
+                    quantity: item.quantity || '1',
+                    unit: item.quantity_unit || 'g'
+                };
 
-            if (groupedFoods[item.meal_type]) {
-                groupedFoods[item.meal_type].push(pairItem);
+                if (groupedFoods[item.meal_type]) {
+                    groupedFoods[item.meal_type].push(pairItem);
+                }
+
+                totalCals += pairItem.calories;
+                totalProt += pairItem.proteins;
+                totalCarb += pairItem.carbs;
+                totalFat += pairItem.fats;
+
+                console.log("recevied plan", pairItem);
             }
-
-            totalCals += pairItem.calories;
-            totalProt += pairItem.proteins;
-            totalCarb += pairItem.carbs;
-            totalFat += pairItem.fats;
-
-            console.log("recevied plan", pairItem);
         }
+        else {
+            for (const item of foods) {
+                const pairItem = {
+                    food: item.food,
+                    index: item.id,
+                    calories: Number(item.calories) || 0,
+                    proteins: Number(item.proteins) || 0,
+                    carbs: Number(item.carbs) || 0,
+                    fats: Number(item.fats) || 0,
+                    quantity: item.quantity || '1',
+                    unit: item.quantity_unit || 'g'
+                };
+
+                if (groupedFoods[item.meal_type]) {
+                    groupedFoods[item.meal_type].push(pairItem);
+                }
+
+                totalCals += pairItem.calories;
+                totalProt += pairItem.proteins;
+                totalCarb += pairItem.carbs;
+                totalFat += pairItem.fats;
+
+                console.log("recevied plan", pairItem);
+            }
+        }
+
 
         // ✅ Only use these once, not fetchTotals()
         setAddedFood(groupedFoods);
@@ -424,7 +452,7 @@ const handleSubmit = async (meal, food, quantity, unit) => {
 
                     <div className = "plan-main-section-body">
                         {plans.map((plan) => (
-                            <Plans key = {plan.meal_id} calories = {plan.calories} proteins = {plan.proteins} created = {plan.created_at} planId = {plan.meal_id} planName = { plan.plan_name } deletePlan = {(planId) => handlePlanDelete(planId)} onClick = {() => handlePlanClick(plan.meal_id)}/>
+                            <Plans key = {plan.meal_id} calories = {plan.calories} proteins = {plan.proteins} carbs = {plan.carbs} created = {plan.created_at} planId = {plan.meal_id} planName = { plan.plan_name } deletePlan = {(planId) => handlePlanDelete(planId)} onClick = {() => handlePlanClick(plan.meal_id)}/>
                         ))}
                     </div>
                 </div>
@@ -432,13 +460,20 @@ const handleSubmit = async (meal, food, quantity, unit) => {
 
                 {(showNewPlan || selectedPlanId) && (
                 <div className = "new-plan-div">
-                    <div className = "new-plan-title">Weekly Diet Planner
+                    <div className = "new-plan-title">
+                        
+                        
+                        <div className = "plan-name-div">
                           <input 
-    type="text" 
-    value={planName} 
-    onChange={(e) => setPlanName(e.target.value)} 
-    placeholder="Enter plan name"
-  />
+                            type="text" 
+                            value={planName} 
+                            onChange={(e) => setPlanName(e.target.value)} 
+                            placeholder="Enter plan name"
+                            className="plan-name"
+                            />
+                        </div>
+
+                        <div className = "new-plan-heading">Weekly Diet Planner</div>
 
                     </div>
                     {/* <div className = "new-plan-days-div">
@@ -469,12 +504,12 @@ const handleSubmit = async (meal, food, quantity, unit) => {
                     </div>
                     <div className = "daily-summary-body">
                         <Quantities title = {`${cals}`} subtitle = "Calories" />
-                        <Quantities title = {`${proteins}`} subtitle = "Protein" />
-                        <Quantities title = {`${carbs}`} subtitle = "Carbs" />
-                        <Quantities title = {`${fats}`} subtitle = "Fats" />                  
+                        <Quantities title = {`${proteins}g`} subtitle = "Protein" />
+                        <Quantities title = {`${carbs}g`} subtitle = "Carbs" />
+                        <Quantities title = {`${fats}g`} subtitle = "Fats" />                  
                     </div>
                     <div className = "daily-summary-footer">
-                        <button  className="daily-summary-footer-btn" onClick={() => {
+                        <button  className="daily-summary-footer-btn final-submit" onClick={() => {
                             sendNutritionValues(cals, proteins, carbs, fats);
                             setShowNewPlan(false);
                             setCals(0);
