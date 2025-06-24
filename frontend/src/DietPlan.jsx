@@ -412,6 +412,20 @@ const handleSubmit = async (meal, food, quantity, unit) => {
         fetchPlans();
     }, []);
 
+    const getInsights = async (planId) => {
+    try {
+        console.log("plan id", planId)
+        const res = await axios.get(`http://localhost:5000/getinsights/${planId}`, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
+        })
+        console.log("AI Diet Insight:", res.data);
+    } catch(err) {
+        console.log("Cannot fetch foods: ", err);
+    }
+}
+
     return(
         <>
             <div className="plan-body">
@@ -452,7 +466,7 @@ const handleSubmit = async (meal, food, quantity, unit) => {
 
                     <div className = "plan-main-section-body">
                         {plans.map((plan) => (
-                            <Plans key = {plan.meal_id} calories = {plan.calories} proteins = {plan.proteins} carbs = {plan.carbs} created = {plan.created_at} planId = {plan.meal_id} planName = { plan.plan_name } deletePlan = {(planId) => handlePlanDelete(planId)} onClick = {() => handlePlanClick(plan.meal_id)}/>
+                            <Plans key = {plan.meal_id} calories = {plan.calories} proteins = {plan.proteins} carbs = {plan.carbs} created = {plan.created_at} planId = {plan.meal_id} planName = { plan.plan_name } deletePlan = {(planId) => handlePlanDelete(planId)} onClick = {() => handlePlanClick(plan.meal_id)} onView={() => getInsights(plan.meal_id)}/>
                         ))}
                     </div>
                 </div>
@@ -526,7 +540,7 @@ const handleSubmit = async (meal, food, quantity, unit) => {
                 </div>
                 )}
 
-                <Link to = "/">Home</Link>
+                <Link to = "/insights">Home</Link>
             </div>
         </>
     );

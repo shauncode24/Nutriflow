@@ -5,6 +5,7 @@ import jwt from 'jsonwebtoken';
 import { Pool } from 'pg';
 import 'dotenv/config';
 import axios from 'axios';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 
 const appId = process.env.APP_ID; // Replace with your Nutritionix app ID
 const appKey = process.env.APP_KEY;
@@ -496,6 +497,69 @@ app.get('/getusername', async (req, res) => {
     username = username.rows[0].username;
 
     res.json( {name: username} );
+})
+
+app.get('/getinsights/:planId', async (req, res) => {
+    const {planId} = req.params;
+    const authHeader = req.headers.authorization;
+    const token = authHeader.split(" ")[1];
+    const decoded = jwt.verify(token, JWT_SECRET);
+    const userId = decoded.username;
+
+    console.log("AI Request Received From ", userId, "for PlanID ", planId);
+
+    const planDetails = await pool.query('SELECT * FROM individualmeals WHERE meal_id = $1', [planId]);
+    const foodDetails = await pool.query('SELECT * FROM meals WHERE plan_id = $1', [planId]);
+
+    const foods = foodDetails.rows;
+
+        const grouped = foods.reduce((acc, item) => {
+            const type = item.meal_type;
+            if (!acc[type]) acc[type] = [];
+            acc[type].push(item);
+            return acc;
+        }, {});
+
+        // console.log(allFoods);
+    const foodList = foods.map(item => 
+      `${item.meal_type} ${item.quantity} ${item.quantity_unit} ${item.food} (calories: ${item.calories}, protein: ${item.proteins}g, carbs: ${item.carbs}g, fats: ${item.fats}g)`
+    ).join("\n");
+
+    const plan = planDetails.rows[0];
+
+    console.log("returned foods ", grouped);
+
+    const genAI = new GoogleGenerativeAI(process.env.API_KEY);
+    const model = genAI.getGenerativeModel({model : "gemini-1.5-flash"});
+    const prompt = `
+        Given the following list of foods with their quantities and nutritional values, analyze the meal plan and respond in the exact JSON format below.
+
+Respond ONLY in this JSON format:
+
+{
+  "summary": "A human-friendly paragraph summarizing the overall diet plan.",
+  "tags": ["High Protein", "Low Sugar", "Balanced"],
+  "nutrientInsights": "Mention which nutrients are high, which are low or missing, and any imbalances.",
+  "suggestions": "Suggest better alternatives, swaps or improvements in the plan.",
+  "comparison": "Compare this diet plan with a standard healthy Indian diet based on macros.",
+  "macroBreakdown": {
+    "Calories": number,
+    "Proteins": number,
+    "Carbs": number,
+    "Fats": number
+  }
+}
+  
+Food List: ${foodList}
+    `
+
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+    const text = response.text();
+
+    res.json({
+        aiResponse: text
+    })
 })
 
 

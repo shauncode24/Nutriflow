@@ -1,0 +1,1 @@
+Write a short, inspiring poem about nature.

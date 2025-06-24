@@ -1,60 +1,57 @@
-import express from 'express';
-import cors from 'cors';
-import 'dotenv/config';
-import axios from 'axios';
+import { config } from 'dotenv';
+config();
 
-// app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
-// require('dotenv').config();
+import { GoogleGenerativeAI } from '@google/generative-ai';
 
-const app = express();
-app.use(cors());
-app.use(express.json());
-
-const appId = process.env.APP_ID; // Replace with your Nutritionix app ID
-const appKey = process.env.APP_KEY; // Replace with your Nutritionix app key
-
-app.get('/', async (req, res) => {
-    const food = 'sev puri'; // Default food if not provided
-    const quantity = '6';
-    const sampleQuery = `${quantity} ${food}`;
+async function runGemini() {
     try {
-      console.log(sampleQuery)
-        // Make the request to Nutritionix API
-        const response = await axios.post(
-            'https://trackapi.nutritionix.com/v2/natural/nutrients',
-            {
-                query: sampleQuery
-            },
-            {
-                headers: {
-                    'x-app-id': appId,
-                    'x-app-key': appKey
-                }
-            }
-        );
+        // Access your API key as an environment variable
+        const genAI = new GoogleGenerativeAI(process.env.API_KEY);
 
-        const nutritionData = response.data.foods[0]; // Get the first food result
-        const nutritionDetails = {
-            name: nutritionData.food_name,
-            calories: nutritionData.nf_calories,
-            fat: nutritionData.nf_total_fat,
-            protein: nutritionData.nf_protein,
-            carbs: nutritionData.nf_total_carbohydrate,
-            image: nutritionData.photo ? nutritionData.photo.thumb : null
-        };
+        // For text-only input, use the gemini-pro model
+        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-        res.json(nutritionDetails); // Send back the nutrition details
+        const prompt = `
+        Given the following list of foods with their quantities and nutritional values, analyze the meal plan and respond in the exact JSON format below.
+
+Respond ONLY in this JSON format:
+
+{
+  "summary": "A human-friendly paragraph summarizing the overall diet plan.",
+  "tags": ["High Protein", "Low Sugar", "Balanced"],
+  "nutrientInsights": "Mention which nutrients are high, which are low or missing, and any imbalances.",
+  "suggestions": "Suggest better alternatives, swaps or improvements in the plan.",
+  "comparison": "Compare this diet plan with a standard healthy Indian diet based on macros.",
+  "macroBreakdown": {
+    "Calories": number,
+    "Proteins": number,
+    "Carbs": number,
+    "Fats": number
+  }
+}
+
+Food List:
+2 boiled eggs (calories: 140, protein: 12g, carbs: 1g, fats: 10g)
+1 cup rice (calories: 200, protein: 4g, carbs: 45g, fats: 0.4g)
+1 apple (calories: 95, protein: 0.5g, carbs: 25g, fats: 0.3g)
+1 cup cooked spinach (calories: 41, protein: 5g, carbs: 6g, fats: 0.5g)
+1 whole wheat roti (calories: 100, protein: 3g, carbs: 20g, fats: 1g)
+1 bowl dal (calories: 180, protein: 10g, carbs: 25g, fats: 3g)
+100g grilled chicken breast (calories: 165, protein: 31g, carbs: 0g, fats: 3.5g)
+1 banana (calories: 105, protein: 1.3g, carbs: 27g, fats: 0.3g)
+1 cup plain yogurt (calories: 150, protein: 8g, carbs: 12g, fats: 3g)
+1 tablespoon peanut butter (calories: 90, protein: 4g, carbs: 3g, fats: 8g)
+
+        `;
+
+        const result = await model.generateContent(prompt);
+        const response = await result.response;
+        const text = response.text();
+        console.log(text);
+
     } catch (error) {
-        console.error('Nutritionix API error:', error.message);
-        res.status(500).json({ error: 'Failed to fetch nutrition data' });
+        console.error("Error connecting to Gemini API:", error);
     }
-});
+}
 
-// useEffect()
-
-// app.get('/', (req, res) => {
-//     res.json({ message: 'Hello from backend!' });
-//   });
-
-const PORT = 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+runGemini();

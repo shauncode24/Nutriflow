@@ -5,6 +5,7 @@ import Login from './components/Login'
 import HomePage from './Homepage'
 import DietPlan from './DietPlan';  
 import Main from './Main';
+import Insights from './Insights';
 
 const router = createBrowserRouter([
   {
@@ -18,6 +19,10 @@ const router = createBrowserRouter([
   {
     path: '/dietplan',
     element: <DietPlan />
+  },
+  {
+    path: '/insights',
+    element: <Insights />
   }
 ])
 
