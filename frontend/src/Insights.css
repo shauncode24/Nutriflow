@@ -1,184 +1,265 @@
 body {
-    margin: 0;
-    padding: 0;
-    background-color: aqua;
-    height: 100%;
-    width: 100%;
-
+  margin: 0;
+  padding: 0;
+  background-color: rgb(236, 236, 236);
+  height: 100%;
+  width: 100%;
 }
 
-.insights-body, .header-div, .title, .subtitle, .main-ai-insight, .main-ai-insights-title, .main-ai-insights-body, .insight, .graphs-div, .graph-1, .meal-level-analysis, .daily-analysis-div, .daily-analysis-header, .daily-analysis-title, .daily-analysis-body, .row, .left-row, .right-row, .daily-analysis-footer-div, .daily-analysis-footer, .recommendations-div, .recommendations-title, .recommendations-body {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-family: "Outfit", sans-serif;
+.insights-body,
+.meal-level-analysis p,
+.header-div,
+.title,
+.subtitle,
+.main-ai-insight,
+.main-ai-insights-title,
+.main-ai-insights-body,
+.insight,
+.graphs-div,
+.graph-1,
+.meal-level-analysis,
+.daily-analysis-div,
+.daily-analysis-header,
+.daily-analysis-title,
+.daily-analysis-body,
+.row,
+.left-row,
+.right-row,
+.daily-analysis-footer-div,
+.daily-analysis-footer,
+.recommendations-div,
+.recommendations-title,
+.recommendations-body,
+.graph-body,
+.graph-1 p {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: "Outfit", sans-serif;
 }
 
 .insights-body {
-    height: 100%;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 20px;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
 }
 
 .header-div {
-    height: 130px;
-    width: 100%;
-    background-color: aliceblue;
-    gap: 10px;
-    width: 90%
+  height: 130px;
+  width: 100%;
+  gap: 10px;
+  width: 90%;
 }
 
 .title {
-    height: 40%;
-    width: 100%;
-    background-color: lightcoral;
-    font-size: 2.5rem;
-    font-weight: 700;
+  height: 40%;
+  width: 100%;
+  font-size: 2.5rem;
+  font-weight: 700;
 }
 
 .subtitle {
-    height: 20%;
-    width: 100%;
-    background-color: lightcoral;
-    font-weight: 300;
-    font-size: 1.1rem;
+  height: 20%;
+  width: 100%;
+  font-weight: 300;
+  font-size: 1.1rem;
 }
 
 .main-ai-insight {
-    height: 200px;
-    width: 100%;
-    background-color: lightblue;
-    gap: 10px;
-    width: 90%;
-    border-radius: 15px;
+  height: 230px;
+  width: 100%;
+  background-color: rgb(39, 39, 39);
+  gap: 10px;
+  width: 90%;
+  border-radius: 15px;
+  padding: 30px 25px;
 }
 
 .main-ai-insights-title {
-    height: 15%;
-    width: 100%;
-    background-color: lightcoral;
+  height: 20%;
+  width: 100%;
+  /* background-color: lightcoral; */
+  align-items: flex-start;
+  justify-content: flex-start;
+  font-size: 1.4rem;
+  font-weight: 500;
+  color: white;
 }
 
 .main-ai-insights-body {
-    height: 57%;
-    width: 100%;
-    background-color: lightcoral;
-    flex-direction: row;
-    /* gap: 15px; */
-    justify-content: space-evenly;
+  height: 80%;
+  width: 100%;
+  /* background-color: lightcoral; */
+  flex-direction: row;
+  gap: 15px;
+  justify-content: space-evenly;
 }
 
 .insight {
-    height: 100%;
-    width: 32%;
-    background-color:brown;
-    border-radius: 10px;
+  height: 100%;
+  width: 34%;
+  background-color: rgb(255, 255, 255);
+  border-radius: 10px;
+  padding: 10px;
+  align-items: flex-start;
+  border-top: 4px solid rgb(81, 181, 221);
 }
 
 .graphs-div {
-    height: 500px;
-    width: 100%;
-    background-color: aliceblue;
-    gap: 20px;
-    flex-direction: row;
-    width: 90%;
+  height: 520px;
+  width: 100%;
+  /* background-color: aliceblue; */
+  gap: 20px;
+  flex-direction: row;
+  width: 90%;
 }
 
 .graph-1 {
-    height: 100%;
-    width: 30%;
-    background-color: lightcoral;
-    border-radius: 15px;
+  height: 100%;
+  width: 33%;
+  background-color: rgb(0, 0, 0);
+  border-radius: 15px;
+  color: white;
+  padding: 25px;
+}
+
+.graph-body {
+  height: 90%;
+  width: 100%;
+}
+
+.graph-1 p {
+  color: white;
+  font-size: 1.4rem;
+  padding: 0;
+  margin: 0;
+  height: 10%;
+  width: 100%;
+  justify-items: flex-end;
 }
 
 .meal-level-analysis {
-    height: fit-content;
-    width: 90%;
-    background-color: lavenderblush;
-    gap: 20px;
-    padding: 20px 0px;
+  height: fit-content;
+  width: 90%;
+  background-color: rgb(0, 0, 0);
+  gap: 20px;
+  padding: 20px 0px;
+  border-radius: 15px;
+}
+
+.meal-level-analysis p {
+  color: white;
+  align-items: flex-start;
+  width: 95%;
+  font-size: 1.4rem;
+  font-weight: 500;
 }
 
 .daily-analysis-div {
-    height: fit-content;
-    width: 95%;
-    background-color: lightgreen;
-    gap: 10px;
-    justify-content: flex-start;
-    padding: 15px 0px;
+  height: fit-content;
+  width: 95%;
+  background-color: rgb(255, 255, 255);
+  gap: 10px;
+  justify-content: flex-start;
+  padding: 15px 15px;
+  border-radius: 12px;
 }
 
 .daily-analysis-header {
-    height: 40px;
-    width: 100%;
-    background-color: rgb(56, 107, 152);
-    align-items: flex-start;
+  height: 40px;
+  width: 100%;
+  /* background-color: rgb(56, 107, 152); */
+  flex-direction: row;
+  justify-content: flex-start;
+  padding: 0px 15px;
 }
 
 .daily-analysis-title {
-    height: 100%;
-    width: 15%;
-    background-color: black;
-    color: white;
+  height: 100%;
+  width: 10%;
+  background-color: rgb(81, 221, 123);
+  color: white;
+  border-radius: 15px;
+  font-size: 1.1rem;
+  margin-right: 15px;
 }
 
 .daily-analysis-body {
-    height: fit-content;
-    width: 100%;
-    background-color: rgb(56, 107, 152);
-    gap: 5px;
+  height: fit-content;
+  width: 100%;
+  padding: 0px 10px;
 }
 
 .row {
-    height: 35px;
-    width: 100%;
-    background-color: aqua;
-    flex-direction: row;
+  height: 35px;
+  width: 100%;
+  flex-direction: row;
+  border-bottom: 1px solid rgb(220, 220, 220);
 }
 
-.left-row, .right-row {
-    height: 100%;
-    width: 50%;
-    background-color: azure;
+.left-row,
+.right-row {
+  height: 100%;
+  width: 50%;
+}
+
+.left-row {
+  text-transform: capitalize;
+  flex-direction: row;
+  justify-content: flex-start;
+}
+
+.left-row div {
+  text-transform: none;
 }
 
 .right-row {
-    background-color: brown;
+  align-items: flex-end;
 }
 
 .daily-analysis-footer-div {
-    height: 60px;
-    width: 100%;
-    background-color: bisque;
-}
-
-.daily-analysis-footer {
-
+  height: 60px;
+  width: 100%;
+  background-color: bisque;
+  border-radius: 8px;
+  padding: 10px;
+  align-items: flex-start;
+  background-color: rgb(218, 255, 229);
+  border-left: 4px solid rgb(81, 221, 123);
 }
 
 .recommendations-div {
-    height: 400px;
-    width: 100%;
-    background-color: beige;
-    gap: 15px;
-    width: 90%;
+  height: fit-content;
+  width: 100%;
+  background-color: rgb(0, 0, 0);
+  gap: 15px;
+  width: 90%;
+  border-radius: 15px;
+  padding: 30px 25px;
 }
 
 .recommendations-title {
-    height: 10%;
-    width: 100%;
-    background-color: lightcoral;
-    width: 95%
+  height: 10%;
+  width: 100%;
+  width: 100%;
+  color: white;
+  align-items: flex-start;
+  font-size: 1.6rem;
+  font-weight: 500;
+  margin-bottom: 5px;
 }
 
 .recommendations-body {
-    height: 15%;
-    width: 95%;
-    background-color: lightcoral;
-    border-radius: 10px;
+  height: 15%;
+  width: 100%;
+  background-color: rgb(255, 255, 255);
+  border-radius: 10px;
+  padding: 15px;
+  border-left: 4px solid rgb(81, 181, 221);
+  align-items: flex-start;
 }
