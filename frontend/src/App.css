@@ -810,6 +810,10 @@ a {
     color: #3663DD;
 }
 
+.plans-header-right-icons-1 a {
+    color: #429A63;
+}
+
 .plans-header-right-icons-4:hover {
     background-color: #dbeafe;
 }

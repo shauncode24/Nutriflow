@@ -97,41 +97,64 @@ body {
 }
 
 .meal-level-analysis {
-    height: 500px;
-    width: 100%;
+    height: fit-content;
+    width: 90%;
     background-color: lavenderblush;
+    gap: 20px;
+    padding: 20px 0px;
 }
 
 .daily-analysis-div {
-
+    height: fit-content;
+    width: 95%;
+    background-color: lightgreen;
+    gap: 10px;
+    justify-content: flex-start;
+    padding: 15px 0px;
 }
 
 .daily-analysis-header {
-
+    height: 40px;
+    width: 100%;
+    background-color: rgb(56, 107, 152);
+    align-items: flex-start;
 }
 
 .daily-analysis-title {
-
+    height: 100%;
+    width: 15%;
+    background-color: black;
+    color: white;
 }
 
 .daily-analysis-body {
-
+    height: fit-content;
+    width: 100%;
+    background-color: rgb(56, 107, 152);
+    gap: 5px;
 }
 
 .row {
-
+    height: 35px;
+    width: 100%;
+    background-color: aqua;
+    flex-direction: row;
 }
 
-.left-row {
-
+.left-row, .right-row {
+    height: 100%;
+    width: 50%;
+    background-color: azure;
 }
 
 .right-row {
-
+    background-color: brown;
 }
 
 .daily-analysis-footer-div {
-
+    height: 60px;
+    width: 100%;
+    background-color: bisque;
 }
 
 .daily-analysis-footer {

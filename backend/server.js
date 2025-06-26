@@ -526,28 +526,38 @@ app.get('/getinsights/:planId', async (req, res) => {
     ).join("\n");
 
     const plan = planDetails.rows[0];
+    console.log("PLANSSSS", plan)
 
     console.log("returned foods ", grouped);
 
     const genAI = new GoogleGenerativeAI(process.env.API_KEY);
     const model = genAI.getGenerativeModel({model : "gemini-1.5-flash"});
     const prompt = `
-        Given the following list of foods with their quantities and nutritional values, analyze the meal plan and respond in the exact JSON format below.
+You are a nutrition expert analyzing a personalized diet plan. Given the list of foods with their quantities and nutritional values (in brackets), analyze the meal plan thoroughly and return ONLY the output in the following JSON format.
+Please ensure the response is grounded in nutritional science and provides clear, concise, and actionable insights.
 
-Respond ONLY in this JSON format:
+Dont do any Markdown formatting. Only send pure the JSON response:
 
 {
-  "summary": "A human-friendly paragraph summarizing the overall diet plan.",
-  "tags": ["High Protein", "Low Sugar", "Balanced"],
-  "nutrientInsights": "Mention which nutrients are high, which are low or missing, and any imbalances.",
-  "suggestions": "Suggest better alternatives, swaps or improvements in the plan.",
-  "comparison": "Compare this diet plan with a standard healthy Indian diet based on macros.",
-  "macroBreakdown": {
-    "Calories": number,
-    "Proteins": number,
-    "Carbs": number,
-    "Fats": number
-  }
+  "summary": "A paragraph summarizing the overall nutritional quality, balance, and health impact of the diet plan.",
+  "insight1": "One sharp observation about the meal structure (e.g., imbalance, over-reliance on one macro).",
+  "insight2": "Another focused insight that highlights a nutritional pattern or concern.",
+  "insight3": "A final key observation, ideally about long-term impact or consistency.",
+  "suggestion1": "One major actionable change for improvement.",
+  "suggestion2": "Another smart swap or change to improve balance or nutrition.",
+  "suggestion3": "A final improvement idea focused on sustainability, diversity, or health.",
+  "breakfast": "Evaluate the breakfast — note macronutrient distribution, quality, and how it sets the tone for the day.",
+  "lunch": "Evaluate the lunch — comment on balance, heaviness, fiber, etc.",
+  "dinner": "Evaluate the dinner — nutritional completeness, heaviness, gaps, etc.",
+  "snacks": "Evaluate snacks — adequacy, nutritional value, opportunity for improvement.",
+  "proteins": "low/medium/high — classify based on total and source quality.",
+  "carbs": "low/medium/high — classify based on quantity and type (refined vs complex).",
+  "fats": "low/medium/high — classify and briefly explain if healthy or saturated fats dominate.",
+  "calories": "low/medium/high — overall energy intake level.",
+  "nutrientInsights": "Paragraph highlighting what nutrients are abundant, missing, or imbalanced. Mention fiber, sodium, vitamins/minerals if possible."
+  "dietRating": "Red | Yellow | Green — Overall rating based on nutritional quality, balance, and long-term health suitability. Use 'Green' for balanced, nutrient-rich plans; 'Yellow' for acceptable but needing improvement; 'Red' for poor or highly imbalanced plans."
+  "processedFoodScore": "A brief rating (Low/Moderate/High) indicating how much of the food plan relies on processed or packaged foods."
+}
 }
   
 Food List: ${foodList}
@@ -558,7 +568,9 @@ Food List: ${foodList}
     const text = response.text();
 
     res.json({
-        aiResponse: text
+        aiResponse: text,
+        planFoods: grouped,
+        planDets: plan
     })
 })
 

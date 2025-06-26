@@ -27,6 +27,10 @@ function DietPlan() {
     const [planSelected, setPlanSelected] = React.useState(0);
     const [selectedPlanId, setSelectedPlanId] = React.useState(null);
     const [planName, setPlanName] = React.useState('')
+    const [aiRes, setAiRes] = React.useState('');
+
+
+    const navigate = useNavigate();
 
     // Quantity and Unit States for each meal
     const [qtyChanged, setQtyChange] = React.useState(null);
@@ -421,10 +425,26 @@ const handleSubmit = async (meal, food, quantity, unit) => {
             }
         })
         console.log("AI Diet Insight:", res.data);
+        navigate("/insights", { state: { insights: res.data.aiResponse, foods: res.data.planFoods, planDetails: res.data.planDets } });
+        setAiRes(res.data);
     } catch(err) {
         console.log("Cannot fetch foods: ", err);
     }
 }
+
+
+// const sendToInsights = async () => {
+//     if (!aiRes) {
+//         SpeechSynthesisErrorEvent("no AI response to send");
+//         return;
+//     }
+//     try {
+//         const res = await axios.post('/insights', {aiResponse: aiRes})
+//     } catch (err) {
+//         console.log("Cannot send to insights: ", err);
+//     }
+// }
+
 
     return(
         <>
@@ -466,7 +486,7 @@ const handleSubmit = async (meal, food, quantity, unit) => {
 
                     <div className = "plan-main-section-body">
                         {plans.map((plan) => (
-                            <Plans key = {plan.meal_id} calories = {plan.calories} proteins = {plan.proteins} carbs = {plan.carbs} created = {plan.created_at} planId = {plan.meal_id} planName = { plan.plan_name } deletePlan = {(planId) => handlePlanDelete(planId)} onClick = {() => handlePlanClick(plan.meal_id)} onView={() => getInsights(plan.meal_id)}/>
+                            <Plans key = {plan.meal_id} calories = {plan.calories} proteins = {plan.proteins} carbs = {plan.carbs} created = {plan.created_at} planId = {plan.meal_id} planName = { plan.plan_name } deletePlan = {(planId) => handlePlanDelete(planId)} onClick = {() => handlePlanClick(plan.meal_id)} onView={() => getInsights(plan.meal_id)} aiResponse = {aiRes}/>
                         ))}
                     </div>
                 </div>
@@ -540,7 +560,7 @@ const handleSubmit = async (meal, food, quantity, unit) => {
                 </div>
                 )}
 
-                <Link to = "/insights">Home</Link>
+                
             </div>
         </>
     );
