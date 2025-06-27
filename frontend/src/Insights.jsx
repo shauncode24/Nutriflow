@@ -11,6 +11,7 @@ import {
   CartesianGrid,
   Legend,
 } from "recharts";
+import { ResponsiveContainer } from "recharts";
 import DailyAnalysis from "./components/DailyAnalysis";
 import { useLocation } from "react-router-dom";
 
@@ -129,89 +130,70 @@ function Insights(props) {
             <div className="graph-1">
               <p>Macronutrient Distribution</p>
               <div className="graph-body">
-                <PieChart width={300} height={300}>
-                  <Pie
-                    data={pieData}
-                    dataKey="value"
-                    nameKey="name"
-                    cx="50%"
-                    cy="50%"
-                    innerRadius={80} // ← Donut effect
-                    outerRadius={120}
-                    paddingAngle={3}
-                    label={false} // Optional: turn off label inside pie
-                  >
-                    {pieData.map((entry, index) => (
-                      <Cell
-                        key={`cell-${index}`}
-                        fill={COLORS[index % COLORS.length]}
-                      />
-                    ))}
-                  </Pie>
-                  <RechartsTooltip />
-                </PieChart>
+                <ResponsiveContainer width="100%" height={250}>
+                  <PieChart>
+                    <Pie
+                      data={pieData}
+                      dataKey="value"
+                      nameKey="name"
+                      cx="50%"
+                      cy="50%"
+                      innerRadius={60}
+                      outerRadius={100}
+                      paddingAngle={3}
+                      label={false}
+                    >
+                      {pieData.map((entry, index) => (
+                        <Cell
+                          key={`cell-${index}`}
+                          fill={COLORS[index % COLORS.length]}
+                        />
+                      ))}
+                    </Pie>
+                    <RechartsTooltip />
+                  </PieChart>
+                </ResponsiveContainer>
+
+                {/* Legend */}
                 <div
                   style={{
                     display: "flex",
                     justifyContent: "center",
-                    gap: "20px",
-                    marginTop: "10px",
+                    flexWrap: "wrap",
+                    gap: "16px",
+                    marginTop: "12px",
                   }}
                 >
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "8px",
-                    }}
-                  >
+                  {["Protein", "Carbohydrates", "Fats"].map((label, i) => (
                     <div
+                      key={label}
                       style={{
-                        width: "12px",
-                        height: "12px",
-                        backgroundColor: "#4285F4",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "8px",
+                        fontSize: "clamp(0.8rem, 1vw + 0.2rem, 1rem)",
                       }}
-                    ></div>
-                    <span>Protein</span>
-                  </div>
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "8px",
-                    }}
-                  >
-                    <div
-                      style={{
-                        width: "12px",
-                        height: "12px",
-                        backgroundColor: "#34A853",
-                      }}
-                    ></div>
-                    <span>Carbohydrates</span>
-                  </div>
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "8px",
-                    }}
-                  >
-                    <div
-                      style={{
-                        width: "12px",
-                        height: "12px",
-                        backgroundColor: "#FBBC05",
-                      }}
-                    ></div>
-                    <span>Fats</span>
-                  </div>
+                    >
+                      <div
+                        style={{
+                          width: "12px",
+                          height: "12px",
+                          backgroundColor: COLORS[i],
+                          borderRadius: "2px",
+                        }}
+                      />
+                      <span>{label}</span>
+                    </div>
+                  ))}
                 </div>
+
+                {/* Percent Values */}
                 <div
                   style={{
                     display: "flex",
                     justifyContent: "center",
-                    gap: "20px",
+                    flexWrap: "wrap",
+                    gap: "16px",
                     marginTop: "20px",
                   }}
                 >
@@ -229,23 +211,30 @@ function Insights(props) {
                         key={entry.name}
                         style={{
                           backgroundColor: "#f9f9f9",
-                          padding: "12px 16px",
+                          padding: "10px 12px",
                           borderRadius: "10px",
                           textAlign: "center",
                           boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
-                          minWidth: "90px",
+                          minWidth: "80px",
+                          flex: "1 1 90px",
+                          maxWidth: "150px",
                         }}
                       >
                         <div
                           style={{
                             fontWeight: "bold",
-                            fontSize: "18px",
+                            fontSize: "clamp(1rem, 1.5vw, 1.25rem)",
                             color,
                           }}
                         >
                           {entry.value.toFixed(0)}g
                         </div>
-                        <div style={{ fontSize: "14px", color: "#555" }}>
+                        <div
+                          style={{
+                            fontSize: "clamp(0.75rem, 1vw, 0.9rem)",
+                            color: "#555",
+                          }}
+                        >
                           {entry.name} ({percentage}%)
                         </div>
                       </div>
@@ -257,37 +246,41 @@ function Insights(props) {
             <div className="graph-1">
               <p>Calories per Meal</p>
               <div className="graph-body">
-                <BarChart
-                  width={400}
-                  height={400}
-                  data={barCaloriesData}
-                  margin={{ top: 20, right: 30, left: 0, bottom: 5 }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="meal_type" />
-                  <YAxis />
-                  <RechartsTooltip />
-                  <Bar dataKey="calories" fill="#8884d8" />
-                </BarChart>
+                <ResponsiveContainer width="100%" height={250}>
+                  <BarChart
+                    width={400}
+                    height={400}
+                    data={barCaloriesData}
+                    margin={{ top: 20, right: 30, left: 0, bottom: 5 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="meal_type" />
+                    <YAxis />
+                    <RechartsTooltip />
+                    <Bar dataKey="calories" fill="#8884d8" />
+                  </BarChart>
+                </ResponsiveContainer>
               </div>
             </div>
             <div className="graph-1">
               <p>Meal Macronutrient Breakdown</p>
               <div className="graph-body">
-                <BarChart
-                  width={400}
-                  height={400}
-                  data={barMacrosData}
-                  margin={{ top: 20, right: 30, left: 0, bottom: 5 }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="meal_type" />
-                  <YAxis />
-                  <RechartsTooltip />
-                  <Bar dataKey="proteins" stackId="a" fill="#82ca9d" />
-                  <Bar dataKey="carbs" stackId="a" fill="#ffc658" />
-                  <Bar dataKey="fats" stackId="a" fill="#ff8042" />
-                </BarChart>
+                <ResponsiveContainer width="100%" height={250}>
+                  <BarChart
+                    width={400}
+                    height={400}
+                    data={barMacrosData}
+                    margin={{ top: 20, right: 30, left: 0, bottom: 5 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="meal_type" />
+                    <YAxis />
+                    <RechartsTooltip />
+                    <Bar dataKey="proteins" stackId="a" fill="#82ca9d" />
+                    <Bar dataKey="carbs" stackId="a" fill="#ffc658" />
+                    <Bar dataKey="fats" stackId="a" fill="#ff8042" />
+                  </BarChart>
+                </ResponsiveContainer>
                 <div
                   style={{
                     display: "flex",
