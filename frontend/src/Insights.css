@@ -11,6 +11,9 @@ body {
 .header-div,
 .title,
 .subtitle,
+.plan-details,
+.plan-name,
+.plan-status,
 .main-ai-insight,
 .main-ai-insights-title,
 .main-ai-insights-body,
@@ -31,7 +34,15 @@ body {
 .recommendations-title,
 .recommendations-body,
 .graph-body,
-.graph-1 p {
+.graph-1 p,
+.nutrients-div,
+.nutrient-title,
+.nutrient-body,
+.nutrients-insight,
+.nutrients-left,
+.nutrient,
+.nutrient-title-in,
+.nutrient-status {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -47,6 +58,7 @@ body {
   align-items: center;
   justify-content: center;
   gap: 20px;
+  padding: 20px 0px;
 }
 
 .header-div {
@@ -68,6 +80,38 @@ body {
   width: 100%;
   font-weight: 300;
   font-size: 1.1rem;
+}
+
+.plan-details {
+  height: 100px;
+  width: 90%;
+  background-color: black;
+  border-radius: 15px;
+  flex-direction: row;
+}
+
+.plan-name {
+  height: 100%;
+  width: 80%;
+  color: white;
+  font-size: 1.4rem;
+  align-items: flex-start;
+  padding-left: 20px;
+  border: none;
+}
+
+.plan-status {
+  height: 100%;
+  width: 20%;
+  align-items: flex-end;
+  padding-right: 20px;
+}
+
+.colordiv {
+  width: 20px;
+  height: 20px;
+  /* background-color: chocolate; */
+  border-radius: 50%;
 }
 
 .main-ai-insight {
@@ -262,4 +306,61 @@ body {
   padding: 15px;
   border-left: 4px solid rgb(81, 181, 221);
   align-items: flex-start;
+}
+
+.nutrients-div {
+  height: 200px;
+  width: 90%;
+  background-color: black;
+  border-radius: 15px;
+  padding: 20px;
+}
+.nutrient-title {
+  height: 25%;
+  width: 100%;
+  font-size: 1.4rem;
+  align-items: flex-start;
+  justify-content: flex-start;
+  color: white;
+  font-weight: 500;
+}
+.nutrient-body {
+  height: 75%;
+  width: 100%;
+  flex-direction: row;
+  gap: 10px;
+}
+.nutrients-insight {
+  height: 100%;
+  width: 70%;
+  background-color: white;
+  border-radius: 10px;
+  padding: 5px 10px;
+  border-left: 4px solid rgb(81, 181, 221);
+}
+.nutrients-left {
+  height: 100%;
+  width: 30%;
+  background-color: white;
+  border-radius: 10px;
+}
+.nutrient {
+  height: 25%;
+  width: 100%;
+  flex-direction: row;
+  justify-content: space-between;
+  border-bottom: 1px solid #c6c6c6;
+  padding: 5px 15px;
+}
+.nutrient-title-in {
+  height: 100%;
+  width: 80%;
+  align-items: flex-start;
+  font-size: 0.9rem;
+}
+.nutrient-status {
+  height: 15px;
+  width: 15px;
+  background-color: bisque;
+  border-radius: 50%;
 }

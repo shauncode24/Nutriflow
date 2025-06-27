@@ -32,7 +32,7 @@ function Insights(props) {
     // foodsObject = JSON.parse(receviedFoods);
     console.log("this is waht insights has", insightsObject);
     console.log("this is plans foods: ", receviedFoods);
-    console.log("plan deatilas: ", planDetails);
+    console.log("plan deatilas: ", planDetails.plan_name);
 
     const pieData = [
       { name: "Proteins", value: 0 },
@@ -81,12 +81,39 @@ function Insights(props) {
       });
     });
 
+    const getColor = (rating) => {
+      const value = rating.toLowerCase();
+      switch (value) {
+        case "red":
+        case "high":
+          return "red";
+        case "yellow":
+        case "medium":
+          return "yellow";
+        case "green":
+        case "low":
+          return "green";
+        default:
+          return "gray"; // fallback
+      }
+    };
+
     return (
       <>
         <div className="insights-body">
           <div className="header-div">
             <div className="title">NutriAnalyzer</div>
             <div className="subtitle">Analyze your meals</div>
+          </div>
+
+          <div className="plan-details">
+            <div className="plan-name">{planDetails.plan_name}</div>
+            <div className="plan-status">
+              <div
+                className="colordiv"
+                style={{ backgroundColor: getColor(insightsObject.dietRating) }}
+              ></div>
+            </div>
           </div>
 
           <div className="main-ai-insight">
@@ -354,6 +381,53 @@ function Insights(props) {
               {insightsObject.suggestion3}
             </div>
             {/* <div className = "recommendations-body"></div> */}
+          </div>
+
+          <div className="nutrients-div">
+            <div className="nutrient-title">Nutrients Insight</div>
+            <div className="nutrient-body">
+              <div className="nutrients-insight">
+                {insightsObject.nutrientInsights}
+              </div>
+              <div className="nutrients-left">
+                <div className="nutrient">
+                  <div className="nutrient-title-in">Proteins</div>
+                  <div
+                    className="nutrient-status"
+                    style={{
+                      backgroundColor: getColor(insightsObject.proteins),
+                    }}
+                  ></div>
+                </div>
+                <div className="nutrient">
+                  <div className="nutrient-title-in">Carbohydrates</div>
+                  <div
+                    className="nutrient-status"
+                    style={{
+                      backgroundColor: getColor(insightsObject.carbs),
+                    }}
+                  ></div>
+                </div>
+                <div className="nutrient">
+                  <div className="nutrient-title-in">Fats</div>
+                  <div
+                    className="nutrient-status"
+                    style={{
+                      backgroundColor: getColor(insightsObject.fats),
+                    }}
+                  ></div>
+                </div>
+                <div className="nutrient" style={{ border: "none" }}>
+                  <div className="nutrient-title-in">Calories</div>
+                  <div
+                    className="nutrient-status"
+                    style={{
+                      backgroundColor: getColor(insightsObject.calories),
+                    }}
+                  ></div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </>
