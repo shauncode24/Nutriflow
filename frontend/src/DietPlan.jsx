@@ -520,21 +520,35 @@ function DietPlan() {
             </div>
 
             <div className="plan-main-section-body">
-              {plans.map((plan) => (
-                <Plans
-                  key={plan.meal_id}
-                  calories={plan.calories}
-                  proteins={plan.proteins}
-                  carbs={plan.carbs}
-                  created={plan.created_at}
-                  planId={plan.meal_id}
-                  planName={plan.plan_name}
-                  deletePlan={(planId) => handlePlanDelete(planId)}
-                  onClick={() => handlePlanClick(plan.meal_id)}
-                  onView={() => getInsights(plan.meal_id)}
-                  aiResponse={aiRes}
-                />
-              ))}
+              {plans && plans.length > 0 ? (
+                plans.map((plan) => (
+                  <Plans
+                    key={plan.meal_id}
+                    calories={plan.calories}
+                    proteins={plan.proteins}
+                    carbs={plan.carbs}
+                    created={plan.created_at}
+                    planId={plan.meal_id}
+                    planName={plan.plan_name}
+                    deletePlan={(planId) => handlePlanDelete(planId)}
+                    onClick={() => handlePlanClick(plan.meal_id)}
+                    onView={() => getInsights(plan.meal_id)}
+                    aiResponse={aiRes}
+                  />
+                ))
+              ) : (
+                <div
+                  style={{
+                    textAlign: "center",
+                    padding: "20px",
+                    fontSize: "1.2rem",
+                    width: "100%",
+                    fontFamily: "Outfit",
+                  }}
+                >
+                  No meal plans found.
+                </div>
+              )}
             </div>
           </div>
         )}

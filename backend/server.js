@@ -608,10 +608,10 @@ Dont do any Markdown formatting. Only send pure the JSON response:
   "lunch": "Evaluate the lunch — comment on balance, heaviness, fiber, etc.",
   "dinner": "Evaluate the dinner — nutritional completeness, heaviness, gaps, etc.",
   "snacks": "Evaluate snacks — adequacy, nutritional value, opportunity for improvement.",
-  "proteins": "low/medium/high — classify based on total and source quality.",
-  "carbs": "low/medium/high — classify based on quantity and type (refined vs complex).",
-  "fats": "low/medium/high — classify and briefly explain if healthy or saturated fats dominate.",
-  "calories": "low/medium/high — overall energy intake level.",
+  "proteins": "low/medium/high — classify based on total and source quality. Give only one of low/medium/high",
+  "carbs": "low/medium/high — classify based on quantity and type (refined vs complex). Give only one of low/medium/high",
+  "fats": "low/medium/high — classify and briefly explain if healthy or saturated fats dominate. Give only one of low/medium/high",
+  "calories": "low/medium/high — overall energy intake level. Give only one of low/medium/high",
   "nutrientInsights": "Paragraph highlighting what nutrients are abundant, missing, or imbalanced. Mention fiber, sodium, vitamins/minerals if possible."
   "dietRating": "Red | Yellow | Green — Overall rating based on nutritional quality, balance, and long-term health suitability. Use 'Green' for balanced, nutrient-rich plans; 'Yellow' for acceptable but needing improvement; 'Red' for poor or highly imbalanced plans."
   "processedFoodScore": "A brief rating (Low/Moderate/High) indicating how much of the food plan relies on processed or packaged foods."
