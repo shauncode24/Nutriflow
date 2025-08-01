@@ -6,6 +6,7 @@ import Quantities from "./components/Quantities";
 import Plans from "./components/Plans";
 import { Link } from "react-router-dom";
 import Sidebar from "./components/Sidebar";
+// import "./App.css";
 
 function DietPlan() {
   const [breakfast, setBreakfast] = React.useState("");
