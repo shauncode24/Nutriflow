@@ -17,7 +17,12 @@ export default function DisplayWorkouts(props) {
           View
         </button>
         <button type="submit">Edit</button>
-        <button type="submit">Delete</button>
+        <button
+          type="button"
+          onClick={() => props.onDelete(props.session.session_id)}
+        >
+          Delete
+        </button>
       </div>
     </div>
   );

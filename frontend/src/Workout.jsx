@@ -15,6 +15,7 @@ function Workout() {
   const [fetchedExercises, setFetchedExercises] = useState([]);
   const [workoutPlans, setWorkoutPlans] = useState([]);
   const [selectedSession, setSelectedSession] = useState(false);
+  const [sessionId, setSessionId] = useState(0);
 
   const [selectedExerciseDay, setSelectedExerciseDay] = useState("");
   const [selectedExerciseMuscle, setSelectedExerciseMuscle] = useState("");
@@ -160,14 +161,18 @@ function Workout() {
       const res = await axios.get(
         `http://localhost:4000/getworkoutsession/${sessionId}`,
         {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         }
       );
 
-      const workoutData = res.data;
-      console.log("Fetched Session Records: ", workoutData);
+      const workoutData = res.data.workoutList;
+      setWorkoutList(res.data.workoutList);
+      setWorkoutName(res.data.workoutName);
+      setSelectedDays(res.data.selectedDays);
+      setselectedMuscles(res.data.selectedMuscles);
+      setSessionId(res.data.workoutId);
+      console.log("Fetched Session Records: ", res.data);
+      console.log("Muscles Fetched: ", selectedMuscles);
 
       setSelectedSession(true);
       setWorkoutList(workoutData);
@@ -217,6 +222,52 @@ function Workout() {
     }
   };
 
+  const handleUpdateWorkout = async (sessionId) => {
+    try {
+      const payload = {
+        workoutName,
+        selectedDays,
+        selectedMuscles,
+        workoutList,
+      };
+
+      const res = await axios.put(
+        `http://localhost:4000/updateworkout/${sessionId}`,
+        payload,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          body: JSON.stringify({}),
+        }
+      );
+
+      // const data = await res.json();
+
+      if (res.ok) {
+        console.log("Workout updated successfully");
+      } else {
+        console.log("Error updating workout");
+      }
+    } catch (err) {
+      console.error("Error updating workout plans: ", err);
+    }
+  };
+
+  const handleDeleteWorkout = async (sessionId) => {
+    try {
+      const res = await axios.delete(
+        `http://localhost:4000/deletesession/${sessionId}`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
+      );
+      await fetchWorkouts();
+    } catch (err) {
+      console.error("Error deleting workout plans: ", err);
+    }
+  };
+
   useEffect(() => {
     fetchWorkouts();
   }, []);
@@ -238,6 +289,7 @@ function Workout() {
                 session={session}
                 key={session.session_id}
                 onView={handleViewWorkout}
+                onDelete={handleDeleteWorkout}
               />
             ))}
           </div>
@@ -386,6 +438,12 @@ function Workout() {
           <div className="default footer-div">
             <button type="button" onClick={handleSaveWorkout}>
               Add
+            </button>
+            <button
+              type="button"
+              onClick={() => handleUpdateWorkout(sessionId)}
+            >
+              Update
             </button>
           </div>
         </div>

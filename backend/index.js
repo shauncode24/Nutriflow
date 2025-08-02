@@ -99,8 +99,8 @@ app.post("/addworkout", async (req, res) => {
             const exerciseId = exerciseRes.rows[0].exercise_id;
             for (const reps of exercise.reps) {
               await pool.query(
-                "INSERT INTO exercise_sets (exercise_id, user_id, no_of_reps) VALUES ($1, $2, $3)",
-                [exerciseId, userId, reps]
+                "INSERT INTO exercise_sets (exercise_id, user_id, no_of_reps, session_id) VALUES ($1, $2, $3, $4)",
+                [exerciseId, userId, reps, sessionId]
               );
             }
           }
@@ -147,53 +147,211 @@ app.get("/getworkoutsession/:session_id", async (req, res) => {
   const sessionId = req.params.session_id;
 
   try {
-    const session = await pool.query(
+    const sessionResult = await pool.query(
       "SELECT * FROM sessions WHERE session_id = $1 AND user_id = $2",
       [sessionId, userId]
     );
+    const session = sessionResult.rows[0];
 
-    const days = await pool.query(
+    const daysResult = await pool.query(
       "SELECT * FROM workout_days WHERE session_id = $1 AND user_id = $2",
       [sessionId, userId]
     );
-    const sessionDays = [];
+    const days = daysResult.rows;
 
-    for (const day of days.rows) {
-      const muscles = await pool.query(
+    const workoutList = {};
+    const selectedMuscles = {};
+    const selectedDays = [];
+
+    for (const day of days) {
+      const dayName = day.day_name;
+      selectedDays.push(dayName);
+
+      const musclesResult = await pool.query(
         "SELECT * FROM day_muscles WHERE session_id = $1 AND user_id = $2 AND day_id = $3",
         [sessionId, userId, day.day_id]
       );
-      const sessionMuscles = [];
+      const muscles = musclesResult.rows;
 
-      for (const muscle of muscles.rows) {
-        const exercises = await pool.query(
+      selectedMuscles[dayName] = [];
+      workoutList[dayName] = [];
+
+      for (const muscle of muscles) {
+        selectedMuscles[dayName].push(muscle.muscle);
+
+        const exercisesResult = await pool.query(
           "SELECT * FROM exercises WHERE session_id = $1 AND user_id = $2 AND day_id = $3 AND muscle_id = $4",
           [sessionId, userId, day.day_id, muscle.muscle_id]
         );
-        const sessionExercises = [];
+        const exercises = exercisesResult.rows;
 
-        for (const exercise of exercises.rows) {
-          const sets = await pool.query(
+        for (const exercise of exercises) {
+          const setsResult = await pool.query(
             "SELECT * FROM exercise_sets WHERE exercise_id = $1 AND user_id = $2",
             [exercise.exercise_id, userId]
           );
+          const sets = setsResult.rows;
+          console.log("SETS: ", sets);
 
-          sessionExercises.push({ ...exercise, sets: sets.rows });
+          workoutList[dayName].push({
+            bodyPart: exercise.body_part,
+            equipment: exercise.equipment,
+            id: exercise.exercise_id,
+            name: exercise.exercise_name,
+            target: exercise.target,
+            secondaryMuscles: exercise.secondary_muscles || [],
+            instructions: exercise.instructions || [],
+            description: exercise.description,
+            difficulty: exercise.difficulty,
+            category: exercise.category,
+            sets: sets.length,
+            reps: sets.map((s) => s.no_of_reps),
+          });
         }
-        sessionMuscles.push({ ...muscle, exercises: sessionExercises });
       }
-      sessionDays.push({ ...day, muscles: sessionMuscles });
     }
 
-    // console.log("Fetched Session Details: ", sessionDays);
-
     res.json({
-      session: session.rows[0],
-      days: sessionDays,
+      workoutName: session.session_name,
+      selectedDays,
+      workoutList,
+      selectedMuscles,
+      exercises: {},
+      workoutId: session.session_id,
     });
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server error");
+  }
+});
+
+app.put("/updateworkout/:session_id", async (req, res) => {
+  const authHeader = req.headers.authorization;
+  const token = authHeader.split(" ")[1];
+  const decoded = jwt.verify(token, JWT_SECRET);
+
+  const userId = decoded.username;
+  const sessionId = req.params.session_id;
+
+  const client = await pool.connect();
+
+  const { workoutName, selectedDays, selectedMuscles, workoutList } = req.body;
+
+  try {
+    await client.query("BEGIN");
+
+    await client.query(
+      "UPDATE sessions SET session_name = $1 WHERE session_id = $2 AND user_id = $3",
+      [workoutName, sessionId, userId]
+    );
+
+    const existingDaysRes = await client.query(
+      "SELECT * FROM workout_days WHERE session_id = $1 AND user_id = $2",
+      [sessionId, userId]
+    );
+
+    const existingDays = existingDaysRes.rows;
+    const existingDayNames = existingDays.map((d) => d.day_name);
+    const newDays = selectedDays;
+
+    for (const day of existingDays) {
+      await client.query(
+        "DELETE FROM workout_days WHERE day_id = $1 AND user_id = $2",
+        [day.day_id, userId]
+      );
+      await client.query(
+        "DELETE FROM day_muscles WHERE day_id = $1 AND user_id = $2",
+        [day.day_id, userId]
+      );
+      await client.query(
+        "DELETE FROM exercises WHERE day_id = $1 AND user_id = $2",
+        [day.day_id, userId]
+      );
+    }
+
+    const dayIdMap = {};
+
+    for (const dayName of newDays) {
+      const inserted = await client.query(
+        "INSERT INTO workout_days (session_id, user_id, day_name) VALUES ($1, $2, $3) RETURNING day_id",
+        [sessionId, userId, dayName]
+      );
+      const dayId = inserted.rows[0].day_id;
+      dayIdMap[dayName] = dayId;
+    }
+
+    for (const dayName of newDays) {
+      const muscles = selectedMuscles[dayName];
+      const exercises = workoutList[dayName];
+      const dayId = dayIdMap[dayName];
+
+      await client.query(
+        "DELETE FROM day_muscles WHERE day_id = $1 AND user_id = $2",
+        [dayId, userId]
+      );
+      await client.query(
+        "DELETE FROM exercises WHERE day_id = $1 AND user_id = $2",
+        [dayId, userId]
+      );
+
+      const muscleIdMap = {};
+      for (const muscle of muscles) {
+        const res = await client.query(
+          "INSERT INTO day_muscles (session_id, user_id, day_id, muscle) VALUES ($1, $2, $3, $4) RETURNING muscle_id",
+          [sessionId, userId, dayId, muscle]
+        );
+        muscleIdMap[muscle] = res.rows[0].muscle_id;
+      }
+
+      for (const ex of exercises) {
+        const muscleId =
+          muscleIdMap[ex.target] || Object.values(muscleIdMap)[0];
+        const exRes = await client.query(
+          `INSERT INTO exercises (
+            session_id, user_id, day_id, muscle_id, exercise_name,
+            exercise_desc
+          ) VALUES ($1, $2, $3, $4, $5, $6)
+          RETURNING exercise_id`,
+          [sessionId, userId, dayId, muscleId, ex.name, ex.description || ""]
+        );
+        const exerciseId = exRes.rows[0].exercise_id;
+
+        for (const rep of ex.reps) {
+          await client.query(
+            "INSERT INTO exercise_sets (user_id, exercise_id, no_of_reps, session_id) VALUES ($1, $2, $3, $4)",
+            [userId, exerciseId, rep, sessionId]
+          );
+        }
+      }
+    }
+
+    await client.query("COMMIT");
+    res.status(200).json({ message: "Workout Updated Successfully" });
+  } catch (err) {
+    await client.query("ROLLBACK");
+    console.error("Error updating workout:", err.message);
+    res.status(500).send("Server error while updating workout");
+  } finally {
+    client.release();
+  }
+});
+
+app.delete("/deletesession/:session_id", async (req, res) => {
+  const authHeader = req.headers.authorization;
+  const token = authHeader.split(" ")[1];
+  const decoded = jwt.verify(token, JWT_SECRET);
+
+  const userId = decoded.username;
+  const sessionId = req.params.session_id;
+
+  try {
+    await pool.query(
+      "DELETE FROM sessions WHERE session_id = $1 AND user_id = $2",
+      [sessionId, userId]
+    );
+    res.status(200).json({ message: "Workout saved successfully" });
+  } catch (err) {
+    console.error("Error deleting session:", err.message);
   }
 });
 
