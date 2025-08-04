@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 export default function DisplayWorkouts(props) {
   return (
     <div
@@ -16,7 +18,7 @@ export default function DisplayWorkouts(props) {
         >
           View
         </button>
-        <button type="submit">Edit</button>
+        <Link to={`${props.link}/${props.session.session_id}`}>Track</Link>
         <button
           type="button"
           onClick={() => props.onDelete(props.session.session_id)}

@@ -8,6 +8,7 @@ import Main from "./Main";
 import Insights from "./Insights";
 import Workout from "./Workout";
 import DisplayWorkouts from "./components/DisplayWorkouts";
+import WorkoutTracker from "./WorkoutTracker";
 
 const router = createBrowserRouter([
   {
@@ -29,6 +30,10 @@ const router = createBrowserRouter([
   {
     path: "/workout",
     element: <Workout />,
+  },
+  {
+    path: "/track/:session_id",
+    element: <WorkoutTracker />,
   },
 ]);
 

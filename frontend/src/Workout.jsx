@@ -5,6 +5,7 @@ import AddedDay from "./components/AddedDay";
 import DisplayWorkouts from "./components/DisplayWorkouts";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 function Workout() {
   const [workoutList, setWorkoutList] = useState({});
@@ -290,6 +291,7 @@ function Workout() {
                 key={session.session_id}
                 onView={handleViewWorkout}
                 onDelete={handleDeleteWorkout}
+                link="/track"
               />
             ))}
           </div>

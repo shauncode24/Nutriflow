@@ -1,0 +1,112 @@
+.default-tracker {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.tracker-body {
+  min-height: 100%;
+  width: 100%;
+  gap: 20px;
+}
+
+.tracker-header {
+  width: 100%;
+  height: fit-content;
+  padding: 40px 0px;
+  background-color: rgb(23, 105, 105);
+}
+
+.tracker-main {
+  width: 100%;
+  height: fit-content;
+  background-color: #f9fafb;
+  justify-content: flex-start;
+  padding: 20px 0px;
+  gap: 20px;
+}
+
+.tracker-part {
+  width: 90%;
+  height: fit-content;
+  background-color: white;
+  justify-content: flex-start;
+  gap: 10px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+}
+
+.tracker-part-header {
+  width: 100%;
+  height: 80px;
+  align-items: flex-start;
+  padding: 20px;
+}
+
+.tracker-part-body {
+  width: 100%;
+  height: fit-content;
+  justify-content: flex-start;
+  gap: 10px;
+  padding: 0px 20px 20px 20px;
+  border-top: 1px solid #e4e5e8;
+}
+
+.tracker-part-body-exercise {
+  width: 100%;
+  height: 50px;
+  align-items: flex-start;
+}
+
+.tracker-part-body-info {
+  width: 100%;
+  height: 70px;
+  background-color: #f9fafb;
+  flex-direction: row;
+  gap: 5px;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+}
+
+.number-div {
+  height: 100%;
+  width: 5%;
+}
+
+.number {
+  width: 35px;
+  height: 35px;
+  background-color: white;
+  border-radius: 50%;
+  border: 1px solid #e2e4e8;
+}
+
+.set-rep-div {
+  height: 100%;
+  width: 90%;
+  flex-direction: row;
+  justify-content: flex-start;
+}
+
+.set-rep-div input {
+  height: 55%;
+  width: 65px;
+  border-radius: 8px;
+  border: 1px solid #000000;
+  background-color: #f6f7f7;
+  border: 1px solid #d1d5db;
+}
+
+.tick-div {
+  height: 100%;
+  width: 5%;
+}
+
+.tick {
+  height: 35px;
+  width: 35px;
+  background-color: #fcfdfd;
+  border: 1px solid #e5e8eb;
+  border-radius: 10px;
+}
