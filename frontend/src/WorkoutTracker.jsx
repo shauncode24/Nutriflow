@@ -12,16 +12,35 @@ export default function WorkoutTracker(props) {
   const [workout, setWorkout] = useState(null);
   const [loading, setLoading] = useState(null);
   const [trackerData, setTrackerData] = useState({});
+  const [currentDate, seetCurrentDate] = useState(new Date());
 
-  const today = new Date();
-  const dayName = today.toLocaleDateString("en-US", { weekday: "long" }); // e.g., "Monday"
-  const dateString = today.toISOString().split("T")[0];
+  // const today = new Date();
+  const dayName = currentDate.toLocaleDateString("en-US", { weekday: "long" }); // e.g., "Monday"
+  const dateString = currentDate.toISOString().split("T")[0];
+
+  const goPreviousDate = () => {
+    seetCurrentDate((prev) => {
+      const newDate = new Date(prev);
+      newDate.setDate(prev.getDate() - 1);
+      return newDate;
+    });
+    setTrackerData({});
+  };
+
+  const goNextDate = () => {
+    seetCurrentDate((prev) => {
+      const newDate = new Date(prev);
+      newDate.setDate(prev.getDate() + 1);
+      return newDate;
+    });
+    setTrackerData({});
+  };
 
   useEffect(() => {
     const fetchWorkoutSession = async () => {
       try {
         const res = await axios.get(
-          `http://localhost:4000/getworkoutsession/${session_id}?day=${dayName}`,
+          `http://localhost:4000/getworkoutsession/${session_id}?day=${dayName}&date=${dateString}`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -37,7 +56,7 @@ export default function WorkoutTracker(props) {
     };
 
     fetchWorkoutSession();
-  }, [session_id, dayName]);
+  }, [session_id, dayName, dateString]);
 
   const handleLogChange = (
     day,
@@ -64,8 +83,8 @@ export default function WorkoutTracker(props) {
         "http://localhost:4000/saveworkoutlogs",
         {
           session_id,
-          date: today.toISOString().split("T")[0],
-          logs: trackerData,
+          date: currentDate.toISOString().split("T")[0],
+          logs: trackerData[dayName] || {},
         },
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
@@ -84,7 +103,11 @@ export default function WorkoutTracker(props) {
   return (
     <>
       <div className="default-tracker tracker-body">
-        <div className="default-tracker tracker-header">Workout Tracker</div>
+        <div className="default-tracker tracker-header">
+          <button onClick={goPreviousDate}>⬅️</button>
+          Workout Tracker {dateString} ({dayName})
+          <button onClick={goNextDate}>➡️</button>
+        </div>
         <div className="default-tracker tracker-main">
           {workout?.selectedMuscles[dayName]?.map((muscle, idx) => (
             <SelectedPart

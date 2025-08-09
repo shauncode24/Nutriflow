@@ -389,6 +389,10 @@ app.delete("/deletesession/:session_id", async (req, res) => {
       "DELETE FROM sessions WHERE session_id = $1 AND user_id = $2",
       [sessionId, userId]
     );
+    await pool.query(
+      "DELETE FROM workout_logs WHERE session_id = $1 AND user_id = $2",
+      [sessionId, userId]
+    );
     res.status(200).json({ message: "Workout saved successfully" });
   } catch (err) {
     console.error("Error deleting session:", err.message);
@@ -403,7 +407,7 @@ app.post("/saveworkoutlogs", async (req, res) => {
   if (!authHeader) return res.status(401).json({ error: "No token provided" });
 
   const token = authHeader.split(" ")[1];
-  const logDate = req.query.date || new Date().toISOString().split("T")[0];
+  const logDate = date || new Date().toISOString().split("T")[0];
   let userId;
   try {
     const decoded = jwt.verify(token, JWT_SECRET);
@@ -423,7 +427,9 @@ app.post("/saveworkoutlogs", async (req, res) => {
             await pool.query(
               `INSERT INTO workout_logs
                 (session_id, user_id, workout_date, day_name, muscle, exercise_id, set_number, weight, reps, log_date)
-               VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`,
+               VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+               ON CONFLICT (session_id, log_date, exercise_id, set_number)
+               DO UPDATE SET weight = EXCLUDED.weight, reps = EXCLUDED.reps`,
               [
                 session_id,
                 userId,
