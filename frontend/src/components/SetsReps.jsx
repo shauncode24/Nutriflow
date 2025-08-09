@@ -1,8 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function SetReps(props) {
   const [weight, setWeight] = useState("");
   const [reps, setReps] = useState("");
+
+  useEffect(() => {
+    setWeight(props.initialWeight || "");
+    setReps(props.initialReps || "");
+  }, [props.initialWeight, props.initialReps]);
 
   const handleChange = (newWeight, newReps) => {
     props.onLogChange(

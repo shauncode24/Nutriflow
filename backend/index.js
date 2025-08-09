@@ -148,6 +148,8 @@ app.get("/getworkoutsession/:session_id", async (req, res) => {
   const userId = decoded.username;
   const sessionId = req.params.session_id;
   const dayFilter = req.query.day || "";
+  const logDate = req.query.date || new Date().toISOString().split("T")[0];
+
   var workoutListFiltered = {};
 
   try {
@@ -197,6 +199,22 @@ app.get("/getworkoutsession/:session_id", async (req, res) => {
           const sets = setsResult.rows;
           console.log("SETS: ", sets);
 
+          const logsResult = await pool.query(
+            `SELECT set_number, weight, reps FROM workout_logs WHERE exercise_id = $1 AND user_id = $2 AND log_date = $3 ORDER BY set_number ASC`,
+            [exercise.exercise_id, userId, logDate]
+          );
+          const loggedSets = logsResult.rows;
+
+          const mergedSets = sets.map((set, idx) => {
+            const log = loggedSets.find((l) => l.set_number === idx + 1);
+            return {
+              setNumber: idx + 1,
+              targetReps: set.no_of_reps,
+              weight: log ? log.weight : "",
+              reps: log ? log.reps : "",
+            };
+          });
+
           workoutList[dayName].push({
             bodyPart: exercise.body_part,
             equipment: exercise.equipment,
@@ -211,6 +229,7 @@ app.get("/getworkoutsession/:session_id", async (req, res) => {
             category: exercise.category,
             sets: sets.length,
             reps: sets.map((s) => s.no_of_reps),
+            mergedSets,
           });
         }
       }
@@ -384,6 +403,7 @@ app.post("/saveworkoutlogs", async (req, res) => {
   if (!authHeader) return res.status(401).json({ error: "No token provided" });
 
   const token = authHeader.split(" ")[1];
+  const logDate = req.query.date || new Date().toISOString().split("T")[0];
   let userId;
   try {
     const decoded = jwt.verify(token, JWT_SECRET);
@@ -402,8 +422,8 @@ app.post("/saveworkoutlogs", async (req, res) => {
               logs[dayName][muscle][exerciseId][setNumber];
             await pool.query(
               `INSERT INTO workout_logs
-                (session_id, user_id, workout_date, day_name, muscle, exercise_id, set_number, weight, reps)
-               VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
+                (session_id, user_id, workout_date, day_name, muscle, exercise_id, set_number, weight, reps, log_date)
+               VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`,
               [
                 session_id,
                 userId,
@@ -414,6 +434,7 @@ app.post("/saveworkoutlogs", async (req, res) => {
                 setNumber,
                 weight || null,
                 reps || null,
+                logDate,
               ]
             );
           }
