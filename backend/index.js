@@ -84,7 +84,7 @@ app.post("/addworkout", async (req, res) => {
         for (const exercise of workoutList[day]) {
           if (exercise.bodyPart === muscle || exercise.target === muscle) {
             const exerciseRes = await pool.query(
-              "INSERT INTO exercises (session_id, day_id, muscle_id, user_id, exercise_name, exercise_desc, sets) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING exercise_id",
+              "INSERT INTO exercises (session_id, day_id, muscle_id, user_id, exercise_name, exercise_desc, sets, part, target) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING exercise_id",
               [
                 sessionId,
                 dayId,
@@ -93,6 +93,8 @@ app.post("/addworkout", async (req, res) => {
                 exercise.name,
                 exercise.description,
                 exercise.sets,
+                exercise.bodyPart,
+                exercise.target,
               ]
             );
             console.log("WORKOUT: ", exercise.name);
@@ -145,6 +147,8 @@ app.get("/getworkoutsession/:session_id", async (req, res) => {
 
   const userId = decoded.username;
   const sessionId = req.params.session_id;
+  const dayFilter = req.query.day || "";
+  var workoutListFiltered = {};
 
   try {
     const sessionResult = await pool.query(
@@ -199,6 +203,7 @@ app.get("/getworkoutsession/:session_id", async (req, res) => {
             id: exercise.exercise_id,
             name: exercise.exercise_name,
             target: exercise.target,
+            part: exercise.part,
             secondaryMuscles: exercise.secondary_muscles || [],
             instructions: exercise.instructions || [],
             description: exercise.description,
@@ -211,10 +216,16 @@ app.get("/getworkoutsession/:session_id", async (req, res) => {
       }
     }
 
+    if (dayFilter) {
+      workoutListFiltered = workoutList[dayFilter];
+      console.log("Filtered list", workoutListFiltered);
+    }
+
     res.json({
       workoutName: session.session_name,
       selectedDays,
       workoutList,
+      workoutListFiltered,
       selectedMuscles,
       exercises: {},
       workoutId: session.session_id,
@@ -309,10 +320,20 @@ app.put("/updateworkout/:session_id", async (req, res) => {
         const exRes = await client.query(
           `INSERT INTO exercises (
             session_id, user_id, day_id, muscle_id, exercise_name,
-            exercise_desc
-          ) VALUES ($1, $2, $3, $4, $5, $6)
+            exercise_desc, part, target, sets
+          ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
           RETURNING exercise_id`,
-          [sessionId, userId, dayId, muscleId, ex.name, ex.description || ""]
+          [
+            sessionId,
+            userId,
+            dayId,
+            muscleId,
+            ex.name,
+            ex.description || ex.exercise_desc,
+            ex.part || ex.bodyPart,
+            ex.target,
+            ex.sets || "",
+          ]
         );
         const exerciseId = exRes.rows[0].exercise_id;
 
@@ -352,6 +373,58 @@ app.delete("/deletesession/:session_id", async (req, res) => {
     res.status(200).json({ message: "Workout saved successfully" });
   } catch (err) {
     console.error("Error deleting session:", err.message);
+  }
+});
+
+app.post("/saveworkoutlogs", async (req, res) => {
+  const { session_id, date, logs } = req.body;
+
+  // Auth
+  const authHeader = req.headers.authorization;
+  if (!authHeader) return res.status(401).json({ error: "No token provided" });
+
+  const token = authHeader.split(" ")[1];
+  let userId;
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+    userId = decoded.username;
+  } catch (err) {
+    return res.status(401).json({ error: "Invalid token" });
+  }
+
+  try {
+    // Flatten and insert all logs
+    for (const dayName in logs) {
+      for (const muscle in logs[dayName]) {
+        for (const exerciseId in logs[dayName][muscle]) {
+          for (const setNumber in logs[dayName][muscle][exerciseId]) {
+            const { weight, reps } =
+              logs[dayName][muscle][exerciseId][setNumber];
+            await pool.query(
+              `INSERT INTO workout_logs
+                (session_id, user_id, workout_date, day_name, muscle, exercise_id, set_number, weight, reps)
+               VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
+              [
+                session_id,
+                userId,
+                date,
+                dayName,
+                muscle,
+                exerciseId,
+                setNumber,
+                weight || null,
+                reps || null,
+              ]
+            );
+          }
+        }
+      }
+    }
+
+    res.status(200).json({ message: "Workout logs saved successfully" });
+  } catch (err) {
+    console.error("Error saving workout logs", err);
+    res.status(500).json({ error: "Failed to save workout logs" });
   }
 });
 
