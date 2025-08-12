@@ -34,7 +34,7 @@ export default function SelectMuscle(props) {
             <option value="forearms">Forearms</option>
             <option value="upper legs">Upper Legs</option>
             <option value="lower legs">Lower Legs</option>
-            <option value="core">Core</option>
+            <option value="abs">Abs</option>
             <option value="cardio">Cardio</option>
             <option value="neck">Neck</option>
           </select>

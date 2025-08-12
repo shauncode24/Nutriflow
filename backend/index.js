@@ -20,7 +20,7 @@ const pool = new Pool({
 const JWT_SECRET = process.env.JWT_SECRET;
 
 // Replace with your actual RapidAPI key
-const RAPIDAPI_KEY = "1b16ff4402msh6ad6e98234bec62p197cf6jsn0c2f4718c1d8";
+const RAPIDAPI_KEY = "2de68a0965msh2718668368fc542p1e9d4cjsn807aba68ed14";
 
 app.get("/getexercise", async (req, res) => {
   const { muscle } = req.query;
@@ -84,7 +84,7 @@ app.post("/addworkout", async (req, res) => {
         for (const exercise of workoutList[day]) {
           if (exercise.bodyPart === muscle || exercise.target === muscle) {
             const exerciseRes = await pool.query(
-              "INSERT INTO exercises (session_id, day_id, muscle_id, user_id, exercise_name, exercise_desc, sets, part, target) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING exercise_id",
+              "INSERT INTO exercises (session_id, day_id, muscle_id, user_id, exercise_name, exercise_desc, sets, part, target, instructions) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING exercise_id",
               [
                 sessionId,
                 dayId,
@@ -95,6 +95,7 @@ app.post("/addworkout", async (req, res) => {
                 exercise.sets,
                 exercise.bodyPart,
                 exercise.target,
+                exercise.instructions,
               ]
             );
             console.log("WORKOUT: ", exercise.name);
@@ -224,7 +225,7 @@ app.get("/getworkoutsession/:session_id", async (req, res) => {
             part: exercise.part,
             secondaryMuscles: exercise.secondary_muscles || [],
             instructions: exercise.instructions || [],
-            description: exercise.description,
+            description: exercise.exercise_desc,
             difficulty: exercise.difficulty,
             category: exercise.category,
             sets: sets.length,

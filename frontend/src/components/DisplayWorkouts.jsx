@@ -1,27 +1,34 @@
 import { Link } from "react-router-dom";
+import "../Workout.css";
 
 export default function DisplayWorkouts(props) {
   return (
-    <div
-      className="display-workout"
-      style={{ width: "300px", height: "300px", backgroundColor: "cyan" }}
-    >
-      <div className="display-workouts-body-title">
+    <div className="default display-workout">
+      <div className="default display-workouts-body-title">
         {props.session.session_name}
       </div>
-      <div className="display-workouts-body-desc">Desc</div>
-      <div className="buttons">
-        <button type="submit">Pause</button>
+      <div className="default display-workouts-body-desc">Desc</div>
+      <div className="default buttons">
+        <button type="submit" className="default action-btn pause">
+          Pause
+        </button>
         <button
           type="button"
+          className="default action-btn view"
           onClick={() => props.onView(props.session.session_id)}
         >
           View
         </button>
-        <Link to={`${props.link}/${props.session.session_id}`}>Track</Link>
+        <Link
+          to={`${props.link}/${props.session.session_id}`}
+          className="default action-btn track"
+        >
+          Track
+        </Link>
         <button
           type="button"
           onClick={() => props.onDelete(props.session.session_id)}
+          className="default action-btn delete"
         >
           Delete
         </button>

@@ -29,6 +29,7 @@ export default function SetReps(props) {
         <input
           type="number"
           value={weight}
+          min="0"
           onChange={(e) => {
             const newWeight = e.target.value;
             setWeight(newWeight);
@@ -39,6 +40,7 @@ export default function SetReps(props) {
         <input
           type="number"
           value={reps}
+          min="0"
           onChange={(e) => {
             const newReps = e.target.value;
             setReps(newReps);

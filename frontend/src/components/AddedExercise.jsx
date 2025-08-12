@@ -5,9 +5,16 @@ export default function AddedExercise(props) {
   const [reps, setReps] = useState(props.exercise.reps || []);
 
   useEffect(() => {
-    const newReps = Array(sets)
+    if (sets === "" || sets === 0) {
+      setReps([]);
+      props.onUpdate({ sets, reps: [] });
+      return;
+    }
+
+    const newReps = Array(Number(sets))
       .fill(0)
       .map((_, i) => reps[i] || 0);
+
     setReps(newReps);
     props.onUpdate({ sets, reps: newReps });
   }, [sets]);
@@ -19,7 +26,7 @@ export default function AddedExercise(props) {
   // Update parent when rep values change
   const handleRepChange = (idx, value) => {
     const updatedReps = [...reps];
-    updatedReps[idx] = parseInt(value) || 0;
+    updatedReps[idx] = value === "" ? "" : parseInt(value, 10);
     setReps(updatedReps);
     props.onUpdate({ sets, reps: updatedReps });
   };
@@ -37,7 +44,10 @@ export default function AddedExercise(props) {
             placeholder="Sets"
             min="0"
             value={sets}
-            onChange={(e) => setSets(parseInt(e.target.value))}
+            onChange={(e) => {
+              const value = e.target.value;
+              setSets(value === "" ? "" : parseInt(value, 10));
+            }}
           />
         </div>
         <div className="default exercise-added-reps">

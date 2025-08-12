@@ -7,11 +7,6 @@ body {
   font-family: "Outfit", sans-serif;
 }
 
-.workout-body {
-  width: 100%;
-  padding: 20px 0px;
-}
-
 .default {
   display: flex;
   flex-direction: column;
@@ -19,17 +14,246 @@ body {
   align-items: center;
 }
 
+.workout-body {
+  width: 100%;
+  padding: 0px 0px;
+  gap: 20px;
+  background: linear-gradient(to right, #edf7ff, #edf8fe);
+  min-height: 100vh;
+  justify-content: flex-start;
+}
+
+.display-workouts-body {
+}
+
+.page-header {
+  width: 100%;
+  height: 70px;
+  background-color: #c5c9cf;
+  margin-bottom: 30px;
+}
+
+.workout-header {
+  width: 90%;
+  height: 200px;
+  gap: 5px;
+}
+
+.workout-header-top {
+  height: 60%;
+  width: 100%;
+  align-items: flex-start;
+  font-size: 2.3rem;
+  font-weight: 600;
+  color: #0c2641;
+}
+
+.workout-header-top p {
+  font-size: 1.1rem;
+  font-weight: 300;
+  color: #4a4a4a;
+}
+
+.workout-header-bottom {
+  height: 40%;
+  width: 100%;
+  background-color: #ffffff;
+  border-radius: 10px;
+  border: 1px solid #d9d9d9;
+  box-shadow: 0 2px 8px rgba(45, 125, 210, 0.08);
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 10px;
+  color: #0f2e4d;
+}
+
+.workout-header-bottom-left {
+  height: 100%;
+  width: 75%;
+  align-items: flex-start;
+  padding-left: 20px;
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+.workout-header-bottom-right {
+  height: 100%;
+  width: 35%;
+  align-items: flex-end;
+  padding-right: 20px;
+}
+
+.workout-header-bottom-right button {
+  height: fit-content;
+  width: fit-content;
+  padding: 15px 20px;
+  background-color: #0069da;
+  border-radius: 10px;
+  border: none;
+  color: white;
+  box-shadow: 0 2px 4px rgba(45, 125, 210, 0.2);
+  outline: none;
+  cursor: pointer;
+  transition: 0.5s all ease;
+  font-family: "Outfit";
+  font-size: 0.9rem;
+}
+
+.workout-header-bottom-right button:hover {
+  background-color: #005dc1;
+  box-shadow: 0 10px 10px rgba(45, 125, 210, 0.25);
+  transform: translateY(-3px);
+}
+
+/* .display-workouts-div {
+}
+
+.display-workouts-header {
+}
+
+.display-workouts-title {
+}
+
+.display-workouts-button-div {
+} */
+
 .display-workouts-body {
   flex-direction: row;
-  gap: 10px;
+  justify-content: flex-start;
+  gap: 5px;
+  width: 90%;
+  height: fit-content;
+  overflow-y: auto;
+  background-color: transparent;
+}
+
+.display-workouts-body::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+.display-workouts-body::-webkit-scrollbar-track {
+  background: #e8f2fa;
+  border-radius: 10px;
+}
+
+.display-workouts-body::-webkit-scrollbar-thumb {
+  background: #a3c8e4;
+  border-radius: 10px;
+  border: 2px solid #e8f2fa;
+}
+
+.display-workouts-body::-webkit-scrollbar-thumb:hover {
+  background: #7fb3d5;
+}
+
+.display-workout {
+  min-width: 100%;
+  height: 150px;
+  border: 1px solid #d7d7d7;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  transition: 0.3s all ease;
+}
+
+.display-workout:hover {
+  border: 1px solid #3787ff;
+}
+
+.display-workouts-body-title {
+  width: 100%;
+  height: 30%;
+  background-color: #ffffff;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: 18px 0px 0px 18px;
+  font-size: 1.2rem;
+  border-radius: 10px 10px 0px 0px;
+}
+
+.display-workouts-body-desc {
+  width: 100%;
+  height: 25%;
+  background-color: #ffffff;
+  align-items: flex-start;
+  padding: 0px 0px 0px 18px;
+  font-weight: 300;
+}
+
+.buttons {
+  width: 100%;
+  height: 45%;
+  background-color: #f6f7f8;
+  flex-direction: row;
+  justify-content: flex-start;
+  padding: 0px 18px;
+  gap: 15px;
+  border-radius: 0px 0px 10px 10px;
+}
+
+.action-btn {
+  padding: 5px 15px;
+  border-radius: 8px;
+  background-color: transparent;
+  font-family: "Outfit";
+  cursor: pointer;
+}
+
+.pause {
+  border: 1px solid #d97706;
+  color: #c97e41;
+  transition: 0.5s all ease;
+}
+
+.pause:hover {
+  background-color: #d97706;
+  color: #ffffff;
+}
+
+.view {
+  border: 1px solid #3b82f6;
+  color: #2d7dd2;
+  transition: 0.5s all ease;
+}
+
+.view:hover {
+  background-color: #3b82f6;
+  color: #ffffff;
+}
+
+.track {
+  border: 1px solid #059669;
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: black;
+  color: #2a9d8f;
+  transition: 0.5s all ease;
+}
+
+.track:hover {
+  background-color: #059669;
+  color: #ffffff;
+}
+
+.delete {
+  border: 1px solid #dc2626;
+  color: #e63946;
+  transition: 0.5s all ease;
+}
+
+.delete:hover {
+  background-color: #dc2626;
+  color: #ffffff;
 }
 
 .workout-main {
   height: 100%;
-  width: 95%;
+  width: 90%;
   background-color: white;
   gap: 10px;
   /* display: none; */
+  border-radius: 10px;
+  margin-bottom: 20px;
 }
 
 .header-div {
@@ -40,6 +264,7 @@ body {
   width: 100%;
   padding: 10px 0px;
   color: white;
+  border-radius: 10px 10px 0px 0px;
 }
 
 .header {
@@ -230,6 +455,7 @@ body {
   padding: 5px 7px;
   flex-direction: row;
   gap: 5px;
+  text-transform: capitalize;
 }
 
 .individual-day-muscle-cross {
@@ -279,6 +505,7 @@ body {
   border-radius: 7px;
   font-family: Outfit;
   outline: none;
+  text-transform: capitalize;
 }
 
 .exercises-subtitle {
@@ -286,6 +513,7 @@ body {
   width: 100%;
   /* background-color: antiquewhite; */
   align-items: flex-start;
+  text-transform: capitalize;
 }
 
 .exercises-body {
@@ -330,21 +558,24 @@ body {
 
 .exercise-title {
   height: 100%;
-  width: 95%;
+  width: 90%;
+  padding: 10px 0px;
   /* background-color: antiquewhite; */
   align-items: flex-start;
   justify-content: flex-end;
   font-size: 1.2rem;
+  text-transform: capitalize;
+  border-bottom: 1px solid #e0e4ea;
 }
 
 .exercise-button-div {
-  height: 95%;
-  width: 5%;
+  height: 100%;
+  width: 10%;
   /* background-color: rgb(255, 147, 6); */
 }
 
 .exercise-button {
-  height: 100%;
+  height: 40px;
   width: 100%;
   background-color: #3b82f6;
   border-radius: 7px;
@@ -354,6 +585,13 @@ body {
   font-family: Outfit;
   font-size: 1.03rem;
   cursor: pointer;
+  transition: 0.5s all ease;
+}
+
+.exercise-button:hover {
+  background-color: rgb(0, 110, 220);
+  box-shadow: 0px 0px 10px rgba(45, 125, 210, 0.6);
+  transform: scale(1.01);
 }
 
 .exercise-body {
@@ -398,10 +636,15 @@ body {
 }
 
 .added-day-div-title {
-  height: 30px;
+  height: 40px;
   width: 100%;
   /* background-color: rgb(230, 241, 241); */
   align-items: flex-start;
+  border-bottom: 1px solid #2d7dd2;
+  background-color: #007bff;
+  border-radius: 5px;
+  padding-left: 10px;
+  color: white;
 }
 
 .added-day-div-content {
@@ -411,6 +654,24 @@ body {
   gap: 10px;
 }
 
+.specific-div {
+  width: 100%;
+  align-items: flex-start;
+  text-transform: capitalize;
+  gap: 10px;
+}
+
+.specific-div p {
+  width: 100%;
+  margin: 10px 0px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #7fb3d5;
+}
+
+/* * {
+  outline: 1px solid red;
+} */
+
 .exercise-added-div {
   height: fit-content;
   width: 100%;
@@ -419,6 +680,7 @@ body {
   flex-direction: row;
   gap: 10px;
   padding: 5px;
+  align-items: center;
 }
 
 .exercise-added-title {
@@ -426,7 +688,6 @@ body {
   width: 35%;
   /* background-color: rosybrown; */
   align-items: flex-start;
-  padding-left: 10px;
 }
 
 .exercise-added-sets {
@@ -465,5 +726,42 @@ body {
 .footer-div {
   height: 80px;
   width: 100%;
-  background-color: aqua;
+  background-color: #434ee7;
+  border-radius: 0px 0px 10px 10px;
+}
+
+.footer-button {
+  height: 40px;
+  width: 200px;
+  border-radius: 10px;
+  border: 1px solid rgb(97, 158, 255);
+  background-color: white;
+  color: black;
+  font-family: "Outfit";
+  font-size: 1rem;
+  transition: 0.3s all ease;
+  cursor: pointer;
+}
+
+.footer-button:hover {
+  background-color: #000000;
+  color: white;
+}
+
+.no-workouts {
+  cursor: not-allowed;
+  background-color: #cbd1d8;
+}
+
+/* .has-sets {
+  background-color: #059669;
+} */
+
+/* .no-workouts {
+  background-color: #059669;
+} */
+
+.no-workouts:hover {
+  background-color: #c1c5cb;
+  color: black;
 }

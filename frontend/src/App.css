@@ -1320,7 +1320,7 @@ a {
   font-weight: 300;
 }
 
-*::-webkit-scrollbar {
+*:not(.display-workouts-body)::-webkit-scrollbar {
   display: none;
 }
 

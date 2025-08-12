@@ -12,3 +12,28 @@ build/
 # OS files
 .DS_Store
 Thumbs.db
+
+# Docker configuration files
+Dockerfile
+Dockerfile.*
+docker-compose.yml
+docker-compose.*.yml
+
+# Docker build and runtime files
+.dockerignore
+.docker/
+docker/
+**/docker/
+
+# Volumes, logs, temp data
+**/tmp/
+**/log/
+**/logs/
+**/data/
+**/volumes/
+
+# Docker cache and generated files
+**/docker-cache/
+**/.docker-cache/
+
+.prettierignore
