@@ -1,4 +1,4 @@
-import "./LandingPage.css";
+import "./styles/LandingPage.css";
 import Features from "./components/Features";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -49,11 +49,7 @@ export default function LandingPage() {
             animate={{ x: 0, opacity: 1 }}
             transition={{ duration: 1 }}
           >
-            <img
-              src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Zml0bmVzcyUyMGZvb2R8ZW58MHx8MHx8fDA%3D"
-              height="91%"
-              width="94%"
-            />
+            <img src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Zml0bmVzcyUyMGZvb2R8ZW58MHx8MHx8fDA%3D" />
           </motion.div>
         </div>
 
