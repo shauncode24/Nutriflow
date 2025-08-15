@@ -401,7 +401,7 @@ app.delete("/deletesession/:session_id", async (req, res) => {
 });
 
 app.post("/saveworkoutlogs", async (req, res) => {
-  const { session_id, date, logs } = req.body;
+  const { session_id, date, logs, dayName } = req.body;
 
   // Auth
   const authHeader = req.headers.authorization;
@@ -410,6 +410,8 @@ app.post("/saveworkoutlogs", async (req, res) => {
   const token = authHeader.split(" ")[1];
   const logDate = date || new Date().toISOString().split("T")[0];
   let userId;
+  console.log("PAYLOAD", logs);
+
   try {
     const decoded = jwt.verify(token, JWT_SECRET);
     userId = decoded.username;
@@ -419,32 +421,43 @@ app.post("/saveworkoutlogs", async (req, res) => {
 
   try {
     // Flatten and insert all logs
-    for (const dayName in logs) {
-      for (const muscle in logs[dayName]) {
-        for (const exerciseId in logs[dayName][muscle]) {
-          for (const setNumber in logs[dayName][muscle][exerciseId]) {
-            const { weight, reps } =
-              logs[dayName][muscle][exerciseId][setNumber];
-            await pool.query(
-              `INSERT INTO workout_logs
-                (session_id, user_id, workout_date, day_name, muscle, exercise_id, set_number, weight, reps, log_date)
-               VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
-               ON CONFLICT (session_id, log_date, exercise_id, set_number)
-               DO UPDATE SET weight = EXCLUDED.weight, reps = EXCLUDED.reps`,
-              [
-                session_id,
-                userId,
-                date,
-                dayName,
-                muscle,
-                exerciseId,
-                setNumber,
-                weight || null,
-                reps || null,
-                logDate,
-              ]
-            );
-          }
+    // logs structure: { muscle: { exerciseId: { setNumber: { weight, reps } } } }
+    for (const muscle in logs) {
+      console.log("PAYLOAD MUSCLE", muscle);
+      for (const exerciseId in logs[muscle]) {
+        console.log("PAYLOAD EXERCISE ID", exerciseId);
+        for (const setNumber in logs[muscle][exerciseId]) {
+          console.log("PAYLOAD SETNUMBER", setNumber);
+
+          // Get the actual set data (weight and reps)
+          const setData = logs[muscle][exerciseId][setNumber];
+          console.log("PAYLOAD SET DATA", setData);
+
+          // Convert weight and reps to integers, handle null/undefined
+          const weight = setData.weight ? parseInt(setData.weight, 10) : null;
+          const reps = setData.reps ? parseInt(setData.reps, 10) : null;
+
+          console.log("WEIGHT:", weight, "REPS:", reps);
+
+          await pool.query(
+            `INSERT INTO workout_logs
+              (session_id, user_id, workout_date, day_name, muscle, exercise_id, set_number, weight, reps, log_date)
+             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+             ON CONFLICT (session_id, log_date, exercise_id, set_number)
+             DO UPDATE SET weight = EXCLUDED.weight, reps = EXCLUDED.reps`,
+            [
+              session_id,
+              userId,
+              date,
+              dayName, // day_name - you don't have this in your payload, so setting to null
+              muscle,
+              parseInt(exerciseId, 10), // Convert exerciseId to integer
+              parseInt(setNumber, 10), // Convert setNumber to integer
+              weight,
+              reps,
+              logDate,
+            ]
+          );
         }
       }
     }

@@ -85,6 +85,7 @@ export default function WorkoutTracker(props) {
           session_id,
           date: currentDate.toISOString().split("T")[0],
           logs: trackerData[dayName] || {},
+          dayName: dayName,
         },
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
@@ -153,7 +154,9 @@ export default function WorkoutTracker(props) {
             />
           ))}
         </div>
-        <button onClick={handleSave}>Save Workout</button>
+        <button onClick={handleSave} className="default-tracker track-button">
+          Save Workout
+        </button>
       </div>
     </>
   );

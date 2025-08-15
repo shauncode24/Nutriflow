@@ -8,7 +8,8 @@
 .tracker-body {
   min-height: 100%;
   width: 100%;
-  gap: 20px;
+  padding-bottom: 50px;
+  background-color: #ffffff;
 }
 
 p {
@@ -24,6 +25,7 @@ p {
   height: 110px;
   background-color: #e9e9e9;
   flex-direction: row;
+  border-bottom: 1px solid #ccc;
 }
 
 .tracker-header-left {
@@ -62,7 +64,7 @@ p {
 .tracker-main {
   width: 100%;
   height: fit-content;
-  background-color: #f9fafb;
+  background-color: #ffffff;
   justify-content: flex-start;
   padding: 20px 0px;
   gap: 20px;
@@ -73,7 +75,7 @@ p {
   height: fit-content;
   background-color: white;
   justify-content: flex-start;
-  border: 1px solid #e5e7eb;
+  border: 1px solid #dfe1e5;
   border-radius: 10px;
 }
 
@@ -181,8 +183,17 @@ p {
   margin-top: 1px;
 }
 
+.tracker-main-div {
+  width: 100%;
+  height: fit-content;
+  /* flex-direction: row; */
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
 .tracker-part-body-info {
   width: 100%;
+  /* min-width: calc(50% - 10px); */
   height: 70px;
   background-color: #f9fafb;
   flex-direction: row;
@@ -219,11 +230,26 @@ p {
   border: 1px solid #000000;
   background-color: #f6f7f7;
   border: 1px solid #d1d5db;
+  outline: none;
+  padding-left: 10px;
+  transition: 0.3s all ease;
+}
+
+.set-rep-div input:focus {
+  background-color: #f0f0f0;
 }
 
 .tick-div {
   height: 100%;
-  width: 5%;
+  width: 15%;
+  flex-direction: row;
+  gap: 15px;
+  justify-content: space-evenly;
+}
+
+.tick-div p {
+  color: #0051ff;
+  font-weight: 300;
 }
 
 .tick {
@@ -232,4 +258,25 @@ p {
   background-color: #fcfdfd;
   border: 1px solid #e5e8eb;
   border-radius: 10px;
+}
+
+.track-button {
+  margin-top: 50px;
+  width: 200px;
+  height: 50px;
+  border: none;
+  background-color: #0051ff;
+  border-radius: 10px;
+  color: white;
+  font-family: "Outfit";
+  font-size: 1rem;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: 0.3s all ease;
+}
+
+.track-button:hover {
+  background-color: #214dc7;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+  transform: translateY(-5px);
 }

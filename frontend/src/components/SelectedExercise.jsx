@@ -38,24 +38,26 @@ export default function SelectedExercise(props) {
         </div>
       )}
 
-      {[...Array(props.exercise.sets)].map((_, i) => {
-        const existingLog = props.exercise.mergedSets?.find(
-          (log) => log.setNumber === i + 1
-        );
-        return (
-          <SetReps
-            key={i}
-            day={props.day}
-            muscle={props.muscle}
-            exerciseId={props.exercise.id}
-            targetReps={props.exercise.reps[i]}
-            setNumber={i + 1}
-            initialWeight={existingLog?.weight || ""}
-            initialReps={existingLog?.reps || ""}
-            onLogChange={props.onLogChange}
-          />
-        );
-      })}
+      <div className="default-tracker tracker-main-div">
+        {[...Array(props.exercise.sets)].map((_, i) => {
+          const existingLog = props.exercise.mergedSets?.find(
+            (log) => log.setNumber === i + 1
+          );
+          return (
+            <SetReps
+              key={i}
+              day={props.day}
+              muscle={props.muscle}
+              exerciseId={props.exercise.id}
+              targetReps={props.exercise.reps[i]}
+              setNumber={i + 1}
+              initialWeight={existingLog?.weight || ""}
+              initialReps={existingLog?.reps || ""}
+              onLogChange={props.onLogChange}
+            />
+          );
+        })}
+      </div>
     </div>
   );
 }

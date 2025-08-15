@@ -50,7 +50,7 @@ export default function SetReps(props) {
         &nbsp; reps
       </div>
       <div className="default-tracker tick-div">
-        target: {props.targetReps}
+        <p>Target Reps: {props.targetReps}</p>
         <div className="default-tracker tick"></div>
       </div>
     </div>

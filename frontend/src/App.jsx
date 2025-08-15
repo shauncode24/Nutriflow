@@ -9,10 +9,15 @@ import Insights from "./Insights";
 import Workout from "./Workout";
 import DisplayWorkouts from "./components/DisplayWorkouts";
 import WorkoutTracker from "./WorkoutTracker";
+import LandingPage from "./LandingPage";
 
 const router = createBrowserRouter([
   {
     path: "/",
+    element: <LandingPage />,
+  },
+  {
+    path: "/login",
     element: <Login />,
   },
   {
