@@ -1,5 +1,5 @@
-import "./styles/LandingPage.css";
-import Features from "./components/Features";
+import "../styles/LandingPage.css";
+import Features from "../components/Features";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 

@@ -2,24 +2,35 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import "./styles/Login.css";
-import Input from "./components/Input";
+import "../styles/Login.css";
+import Input from "../components/Input";
 import { motion } from "framer-motion";
 
 function Login() {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [pass, setPassword] = useState("");
+  const [confirmPass, setConfirmPass] = useState("");
+  const [isSignup, setIsSignup] = useState(false);
 
   const register = async () => {
     try {
+      if (pass !== confirmPass) {
+        alert("Passwords do not match!");
+        return;
+      }
+
       const res = await axios.post("http://localhost:5000/register", {
         username: username,
         pass: pass,
       });
+
       alert("Successfully Registered. Press Login to Continue");
       console.log(res.data);
-      navigate("/");
+
+      setIsSignup(false);
+      setConfirmPass("");
+      navigate("/login");
     } catch (err) {
       console.error(err);
     }
@@ -62,8 +73,10 @@ function Login() {
               <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z" />
             </svg>
           </div>
-          <span>Welcome Back</span>
-          <p>Sign in to your account</p>
+          <span>{isSignup ? "Create Account" : "Welcome Back"}</span>
+          <p>
+            {isSignup ? "Sign up to get started" : "Sign in to your account"}
+          </p>
         </div>
 
         <Input
@@ -79,11 +92,20 @@ function Login() {
           functionValue={(e) => setPassword(e.target.value)}
         />
 
+        {isSignup && (
+          <Input
+            inputLabel="CONFIRM PASSWORD"
+            type="password"
+            place="Re-enter Password"
+            functionValue={(e) => setConfirmPass(e.target.value)}
+          />
+        )}
+
         <input
           type="submit"
           className="default-login submit-button"
-          value="Sign In"
-          onClick={login}
+          value={isSignup ? "Sign Up" : "Sign In"}
+          onClick={isSignup ? register : login}
         />
 
         <div className="default-login divider">
@@ -112,13 +134,27 @@ function Login() {
         </button>
 
         <div className="default-login sign-in-div">
-          Don't have an account? &nbsp;
-          <input
-            type="submit"
-            className="default-login sign-in-button"
-            value="Sign Up"
-            onClick={register}
-          />
+          {isSignup ? (
+            <>
+              Already have an account? &nbsp;
+              <button
+                className="default-login sign-in-button"
+                onClick={() => setIsSignup(false)}
+              >
+                Sign In
+              </button>
+            </>
+          ) : (
+            <>
+              Don't have an account? &nbsp;
+              <button
+                className="default-login sign-in-button"
+                onClick={() => setIsSignup(true)}
+              >
+                Sign Up
+              </button>
+            </>
+          )}
         </div>
         {/* </div> */}
       </motion.div>
