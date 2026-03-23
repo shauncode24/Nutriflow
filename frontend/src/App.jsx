@@ -3,13 +3,14 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Login from "./pages/Login";
 import HomePage from "./pages/Homepage";
-import DietPlan from "./DietPlan";
+import DietPlan from "./pages/DietPlan";
 import Main from "./pages/Main";
 import Insights from "./Insights";
 import Workout from "./Workout";
 import DisplayWorkouts from "./components/DisplayWorkouts";
 import WorkoutTracker from "./WorkoutTracker";
 import LandingPage from "./pages/LandingPage";
+import CustomMeal from "./components/CustomMeal";
 
 const router = createBrowserRouter([
   {
@@ -39,6 +40,10 @@ const router = createBrowserRouter([
   {
     path: "/track/:session_id",
     element: <WorkoutTracker />,
+  },
+  {
+    path: "/custommeal",
+    element: <CustomMeal />,
   },
 ]);
 

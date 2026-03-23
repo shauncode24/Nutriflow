@@ -16,104 +16,7 @@ body {
   overflow-x: hidden;
 }
 
-.body-div,
-.container,
-.left,
-.right,
-.input-div,
-.input-label,
-.input-field-div,
-.input-field,
-.main-label,
-.submit-div,
-.extras,
-.submit-button,
-.extras-left,
-.extras-right,
-.right-content,
-.welcome,
-.mid-text,
-.sign-in-div,
-.sign-in-button,
-.homepage-body,
-.herosection,
-.right-section,
-.left-section,
-.herosection-title,
-.herosection-subtitle,
-.herosection-button,
-.herobutton,
-.main-body,
-.sidebar,
-.content,
-.optionsdiv,
-.option,
-.container-main,
-.hero-main,
-.internal-main,
-.footer-main,
-.card-image-div,
-.card-title,
-.card-description,
-.card-button,
-.plan-header,
-.plan-main-section,
-.plan-main-section-header,
-.plan-main-section-title,
-.plan-main-section-button-div,
-.plan-main-section-button,
-.plan-main-section-body,
-.plans-div,
-.plans-header,
-.plans-header-left,
-.plans-header-status-div,
-.plans-header-status,
-.plans-header-right,
-.created-on-div,
-.action-buttons,
-.icons,
-.plans-body,
-.target-nuts,
-.target-nuts-left,
-.target-nuts-right,
-.new-plan-div,
-.daily-summary-div,
-.new-plan-title,
-.new-plan-days-div,
-.new-plan-day-div,
-.new-plan-divisions,
-.plan-divisions,
-.plan-upper,
-.plan-divisions-image,
-.plan-divisions-title,
-.plan-divisions-search-div,
-.search-foods,
-.plan-divisions-display-div,
-.inner-text,
-.daily-summary-header,
-.daily-summary-img,
-.daily-summary-title,
-.daily-summary-body,
-.daily-summary-footer,
-.daily-summary-body-div,
-.daily-summary-body-div-title,
-.daily-summary-body-div-content,
-.daily-summary-footer-btn,
-.plan-header-title,
-.plan-header-subtitle,
-.new-plan-heading,
-.plan-name-div,
-.plan-name,
-.food-item,
-.food-name,
-.food-qtys,
-.food-li,
-.remove-btn,
-.edit-btn,
-.food-list,
-.quantity-input,
-.unit-select,
-.submit {
+.plan-default {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -132,7 +35,27 @@ body {
   width: 100%;
   padding: 0;
   margin: 0;
-  background-color: #e6edc6;
+  background: linear-gradient(
+    135deg,
+    #2563eb 0%,
+    /* darker blue-600 */ #2776f7 35%,
+    /* blue-500 */ #4b9afb 75%,
+    /* blue-400 */ #6db1ff 100% /* blue-300 */
+  );
+  background-size: 400% 400%;
+  animation: gradientMove 10s ease infinite;
+}
+
+@keyframes gradientMove {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 .plan-body {
@@ -161,10 +84,6 @@ body {
   outline: 1px solid red;
 } */
 
-.plan-body {
-  background: linear-gradient(to bottom, #edfaf3 80%, #edfdf5);
-}
-
 .plan-header {
   height: 150px;
   width: 100%;
@@ -173,24 +92,23 @@ body {
   /* background-color: #eafce9; */
   font-family: "Outfit", sans-serif;
   gap: 5%;
-  border-bottom: 1px solid #c6d4c5;
 }
 
 .plan-header-title {
   height: 50%;
   width: 100%;
-  color: #2a4056;
-  font-size: 2.6rem;
+  color: #ffffff;
+  font-size: 3rem;
   font-weight: 600;
-  text-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
+  text-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .plan-header-subtitle {
   height: 25%;
   width: 100%;
-  font-size: 1rem;
-  font-weight: 400;
-  color: #4c5f6b;
+  font-size: 1.2rem;
+  font-weight: 300;
+  color: #ffffff;
 }
 
 .plan-main-section {
@@ -199,8 +117,10 @@ body {
   justify-content: flex-start;
   padding: 0px 50px;
   margin-top: 30px;
-  background-color: white;
-  box-shadow: 0px 15px 10px rgba(0, 0, 0, 0.09);
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.09);
   /* border-bottom: 1px solid black; */
   margin-bottom: 50px;
   border-radius: 15px;
@@ -231,7 +151,7 @@ body {
 .plan-main-section-button {
   width: 80%;
   height: 50%;
-  background-color: #22c55e;
+  background-color: #2563eb;
   border: none;
   /* border: 1px solid #208d36; */
   border-radius: 15px;
@@ -242,14 +162,14 @@ body {
   color: white;
   font-size: 1.2rem;
   font-weight: 500;
-  box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.1);
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
 .plan-main-section-button:hover {
   transform: scale(1.04);
-  background-color: #1a9748;
+  background-color: #1d4ed8;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
 }
 
 .plan-main-section-button svg {
@@ -269,19 +189,20 @@ body {
 .plans-div {
   width: 1200px;
   height: 98%;
-  background-color: #f7fbff;
+  background-color: #f8fbff;
   border-radius: 15px;
-  border: 1px solid #dadada;
+  border: 1px solid #ffffff;
   justify-content: flex-start;
   padding: 10px 20px;
   gap: 10px;
   font-family: "Outfit", sans-serif;
   flex: 0 0 auto;
   transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.15);
 }
 
 .plans-div:hover {
-  border: 1px solid #3fb34e;
+  border: 1px solid #0073ff;
 }
 
 .plans-header {
@@ -305,11 +226,13 @@ body {
   font-size: 1.6rem;
   letter-spacing: 0.5px;
   gap: 5px;
+  color: #1e3a8a;
+  font-weight: 500;
 }
 
 .subheading-main-meal {
   font-size: 0.9rem;
-  color: #8d8d8d;
+  color: #64748b;
   font-weight: 300;
 }
 
@@ -326,10 +249,10 @@ body {
 .plans-header-status {
   height: 50%;
   width: fit-content;
-  background-color: #dcfce7;
+  background-color: #bfdbfe;
   padding: 0px 10px;
   border-radius: 15px;
-  color: #15803d;
+  color: #1e40af;
   font-weight: 300;
   font-size: 0.8rem;
 }
@@ -498,25 +421,13 @@ body {
   font-family: "Outfit", sans-serif;
   font-size: 2rem;
   font-weight: 500;
-  flex-direction: row;
   border-bottom: 1px solid #d4d4d4;
-}
-
-.new-plan-heading {
-  width: 50%;
-  height: 100%;
-  align-items: center;
-}
-
-.plan-name-div {
-  width: 50%;
-  height: 70%;
   align-items: flex-start;
 }
 
 .plan-name {
-  width: 70%;
-  height: 60%;
+  width: 100%;
+  height: 100%;
   border: none;
   outline: none;
   padding: 8px 12px;
@@ -525,6 +436,10 @@ body {
   font-family: "Outfit", sans-serif;
   font-size: 1.2rem;
   letter-spacing: 1px;
+}
+
+.plan-name:focus {
+  color: black;
 }
 
 /* .new-plan-days-div {

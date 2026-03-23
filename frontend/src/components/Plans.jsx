@@ -4,41 +4,51 @@ import { useNavigate } from "react-router-dom";
 function Plans(props) {
   return (
     <>
-      <div className="plans-div" id={`plan-${props.planId}`}>
-        <div className="plans-header">
-          <div className="plans-header-left">
-            <div className="header-main-meal">{props.planName}</div>
-            <div className="subheading-main-meal">hello</div>
+      <div className="plan-default plans-div" id={`plan-${props.planId}`}>
+        <div className="plan-default plans-header">
+          <div className="plan-default plans-header-left">
+            <div className="plan-default header-main-meal">
+              {props.planName}
+            </div>
+            <div className="plan-default subheading-main-meal">hello</div>
           </div>
-          <div className="plans-header-status-div">
-            <div className="plans-header-status">Active Plan</div>
+          <div className="plan-default plans-header-status-div">
+            <div className="plan-default plans-header-status">Active Plan</div>
           </div>
         </div>
 
-        <div className="plans-body">
-          <div className="target-nuts cal">
-            <div className="target-nuts-left left-cal">Target Calories</div>
-            <div className="target-nuts-right right-cal">
+        <div className="plan-default plans-body">
+          <div className="plan-default target-nuts cal">
+            <div className="plan-default target-nuts-left left-cal">
+              Target Calories
+            </div>
+            <div className="plan-default target-nuts-right right-cal">
               {props.calories}/day
             </div>
           </div>
-          <div className="target-nuts prot">
-            <div className="target-nuts-left left-prot">Target Proteins</div>
-            <div className="target-nuts-right right-prot">
+          <div className="plan-default target-nuts prot">
+            <div className="plan-default target-nuts-left left-prot">
+              Target Proteins
+            </div>
+            <div className="plan-default target-nuts-right right-prot">
               {props.proteins}/day
             </div>
           </div>
-          <div className="target-nuts carbs">
-            <div className="target-nuts-left left-carbs">Target Carbs</div>
-            <div className="target-nuts-right right-carbs">{props.carbs} g</div>
+          <div className="plan-default target-nuts carbs">
+            <div className="plan-default target-nuts-left left-carbs">
+              Target Carbs
+            </div>
+            <div className="plan-default target-nuts-right right-carbs">
+              {props.carbs} g
+            </div>
           </div>
         </div>
 
-        <div className="plans-header-right">
-          <div className="created-on-div">created on</div>
-          <div className="action-buttons">
+        <div className="plan-default plans-header-right">
+          <div className="plan-default created-on-div">created on</div>
+          <div className="plan-default action-buttons">
             <div
-              className="icons plans-header-right-icons-1"
+              className="plan-default icons plans-header-right-icons-1"
               onClick={props.onView}
             >
               <svg
@@ -55,7 +65,7 @@ function Plans(props) {
               <Link to="/insights">View</Link>
             </div>
             <div
-              className="icons plans-header-right-icons-4"
+              className="plan-default icons plans-header-right-icons-4"
               onClick={() => {
                 props.onClick();
               }}
@@ -72,9 +82,11 @@ function Plans(props) {
               </svg>
               Edit
             </div>
-            <div className="icons plans-header-right-icons-2">Pause</div>
+            <div className="plan-default icons plans-header-right-icons-2">
+              Pause
+            </div>
             <div
-              className="icons plans-header-right-icons-3"
+              className="plan-default icons plans-header-right-icons-3"
               onClick={() => props.deletePlan(props.planId)}
             >
               {/* <button className = "plans-header-right-delete-btn" > */}

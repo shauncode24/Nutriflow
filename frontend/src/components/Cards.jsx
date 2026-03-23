@@ -11,9 +11,9 @@ function Card(props) {
         <div className="main-default card-title">{props.title}</div>
         <div className="main-default card-description">{props.description}</div>
         <div className="main-default card-button-div">
-          <button className="main-default card-button">
-            <Link to={props.link}>{props.buttontitle}</Link>
-          </button>
+          <Link to={props.link} className="main-default card-button">
+            {props.buttontitle}
+          </Link>
         </div>
       </div>
     </>

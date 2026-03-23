@@ -1,0 +1,45 @@
+* {
+  box-sizing: border-box;
+}
+
+.custom-default {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.custom-body {
+  min-height: 100vh;
+  background-color: aqua;
+}
+
+.custom-container {
+  height: 500px;
+  width: 90vw;
+  background-color: aquamarine;
+}
+
+.custom-header {
+  height: 100px;
+  width: 100%;
+  background-color: azure;
+}
+
+.custom-search-div {
+  height: 50px;
+  width: 100%;
+  background-color: bisque;
+}
+
+.custom-container-body {
+  height: 50px;
+  width: 100%;
+  background-color: rgb(254, 254, 254);
+}
+
+.custom-submit-div {
+  height: 50px;
+  width: 100%;
+  background-color: bisque;
+}

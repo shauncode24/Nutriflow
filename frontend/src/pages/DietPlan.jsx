@@ -1,14 +1,14 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import NewPlanDivs from "./components/NewPlanDivs";
-import Quantities from "./components/Quantities";
-import Plans from "./components/Plans";
+import NewPlanDivs from "../components/NewPlanDivs";
+import Quantities from "../components/Quantities";
+import Plans from "../components/Plans";
 import { Link } from "react-router-dom";
-import Sidebar from "./components/Sidebar";
-// import "./App.css";
+import Sidebar from "../components/Sidebar";
+import "../styles/DietPlan.css";
 
-function DietPlan() {
+function DietPlan(props) {
   const [breakfast, setBreakfast] = React.useState("");
   const [lunch, setLunch] = React.useState("");
   const [dinner, setDinner] = React.useState("");
@@ -29,11 +29,29 @@ function DietPlan() {
   const [selectedPlanId, setSelectedPlanId] = React.useState(null);
   const [planName, setPlanName] = React.useState("");
   const [aiRes, setAiRes] = React.useState("");
+  const [username, setUsername] = React.useState("");
 
   const navigate = useNavigate();
 
   // Quantity and Unit States for each meal
   const [qtyChanged, setQtyChange] = React.useState(null);
+
+  React.useEffect(() => {
+    const fetchUsername = async () => {
+      try {
+        const res = await axios.get("http://localhost:5000/getusername", {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+        setUsername(res.data.name); // ✅ Access `name` from the response
+      } catch (err) {
+        console.error("Error fetching username:", err);
+      }
+    };
+
+    fetchUsername();
+  }, []);
 
   React.useEffect(() => {
     const token = localStorage.getItem("token");
@@ -468,24 +486,26 @@ function DietPlan() {
 
   return (
     <>
-      <div className="plan-body">
-        <Sidebar />
-        <div className="plan-header">
-          <div className="plan-header-title">
+      <div className="plan-default plan-body">
+        <Sidebar user={username} />
+        <div className="plan-default plan-header">
+          <div className="plan-default plan-header-title">
             Create Your Personal Diet Plan
           </div>
-          <div className="plan-header-subtitle">
+          <div className="plan-default plan-header-subtitle">
             Design a customized meal plan that fits your lifestyle and goals
           </div>
         </div>
 
         {!showNewPlan && !selectedPlanId && (
-          <div className="plan-main-section">
-            <div className="plan-main-section-header">
-              <div className="plan-main-section-title">Your Meals Plans</div>
-              <div className="plan-main-section-button-div">
+          <div className="plan-default plan-main-section">
+            <div className="plan-default plan-main-section-header">
+              <div className="plan-default plan-main-section-title">
+                Your Meals Plans
+              </div>
+              <div className="plan-default plan-main-section-button-div">
                 <button
-                  className="plan-main-section-button"
+                  className="plan-default plan-main-section-button"
                   onClick={() => {
                     setShowNewPlan(!showNewPlan);
                     setPlanSelected(0); // ✅ Exit edit mode
@@ -507,7 +527,7 @@ function DietPlan() {
                     width="25"
                     height="25"
                     fill="white"
-                    className="bi bi-plus-lg"
+                    className="plan-default bi bi-plus-lg"
                     viewBox="0 0 16 16"
                   >
                     <path
@@ -520,7 +540,7 @@ function DietPlan() {
               </div>
             </div>
 
-            <div className="plan-main-section-body">
+            <div className="plan-default plan-main-section-body">
               {plans && plans.length > 0 ? (
                 plans.map((plan) => (
                   <Plans
@@ -555,19 +575,21 @@ function DietPlan() {
         )}
 
         {(showNewPlan || selectedPlanId) && (
-          <div className="new-plan-div">
-            <div className="new-plan-title">
-              <div className="plan-name-div">
-                <input
-                  type="text"
-                  value={planName}
-                  onChange={(e) => setPlanName(e.target.value)}
-                  placeholder="Enter plan name"
-                  className="plan-name"
-                />
-              </div>
+          <div className="plan-default new-plan-div">
+            <div className="plan-default new-plan-title">
+              {/* <div className="plan-default plan-name-div"> */}
+              <input
+                type="text"
+                value={planName}
+                onChange={(e) => setPlanName(e.target.value)}
+                placeholder="Enter plan name"
+                className="plan-default plan-name"
+              />
+              {/* </div> */}
 
-              <div className="new-plan-heading">Weekly Diet Planner</div>
+              {/* <div className="plan-default new-plan-heading">
+                Weekly Diet Planner
+              </div> */}
             </div>
             {/* <div className = "new-plan-days-div">
                         <div className = "new-plan-day-div">Monday</div>
@@ -578,7 +600,7 @@ function DietPlan() {
                         <div className = "new-plan-day-div">Saturday</div>
                         <div className = "new-plan-day-div">Sunday</div>
                     </div> */}
-            <div className="new-plan-divisions">
+            <div className="plan-default new-plan-divisions">
               <NewPlanDivs
                 title="Breakfast"
                 image="https://www.svgrepo.com/show/1877/fried-egg.svg"
@@ -636,26 +658,28 @@ function DietPlan() {
         )}
 
         {(showNewPlan || selectedPlanId) && (
-          <div className="daily-summary-div">
-            <div className="daily-summary-header">
-              <div className="daily-summary-img">
+          <div className="plan-default daily-summary-div">
+            <div className="plan-default daily-summary-header">
+              <div className="plan-default daily-summary-img">
                 <img
                   src="https://www.svgrepo.com/show/404501/burn-fire-flame-hot.svg"
                   height="100%"
                   width="100%"
                 />
               </div>
-              <div className="daily-summary-title">Daily Summary</div>
+              <div className="plan-default daily-summary-title">
+                Daily Summary
+              </div>
             </div>
-            <div className="daily-summary-body">
+            <div className="plan-default daily-summary-body">
               <Quantities title={`${cals}`} subtitle="Calories" />
               <Quantities title={`${proteins}g`} subtitle="Protein" />
               <Quantities title={`${carbs}g`} subtitle="Carbs" />
               <Quantities title={`${fats}g`} subtitle="Fats" />
             </div>
-            <div className="daily-summary-footer">
+            <div className="plan-default daily-summary-footer">
               <button
-                className="daily-summary-footer-btn final-submit"
+                className="plan-default daily-summary-footer-btn final-submit"
                 onClick={() => {
                   sendNutritionValues(cals, proteins, carbs, fats);
                   setShowNewPlan(false);
@@ -670,8 +694,8 @@ function DietPlan() {
               >
                 Save Diet Plan
               </button>
-              <button className="daily-summary-footer-btn">
-                Export to PDF
+              <button className="plan-default daily-summary-footer-btn">
+                <Link to="/custommeal">Custom</Link>
               </button>
             </div>
           </div>
