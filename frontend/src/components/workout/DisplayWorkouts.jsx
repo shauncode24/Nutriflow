@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import "../Workout.css";
+import "../../styles/Workout.css";
 
 export default function DisplayWorkouts(props) {
   return (

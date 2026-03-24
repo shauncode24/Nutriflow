@@ -33,7 +33,7 @@ export default function SetReps(props) {
           onChange={(e) => {
             const newWeight = e.target.value;
             setWeight(newWeight);
-            handleChange(newWeight, reps); // pass new weight + existing reps
+            handleChange(newWeight, reps);
           }}
         />
         &nbsp; kg &nbsp; &nbsp; &nbsp;
@@ -44,7 +44,7 @@ export default function SetReps(props) {
           onChange={(e) => {
             const newReps = e.target.value;
             setReps(newReps);
-            handleChange(weight, newReps); // pass existing weight + new reps
+            handleChange(weight, newReps);
           }}
         />
         &nbsp; reps

@@ -1,5 +1,5 @@
 import "../styles/LandingPage.css";
-import Features from "../components/Features";
+import Features from "../components/ui/Features";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 
@@ -8,9 +8,6 @@ export default function LandingPage() {
     <>
       <motion.div
         className="landing landing-body"
-        // initial={{ opacity: 0 }}
-        // animate={{ opacity: 1 }}
-        // transition={{ duration: 1 }}
       >
         <motion.div
           className="landing landing-header"

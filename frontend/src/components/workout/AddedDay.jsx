@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import AddedExercise from "./AddedExercise";
 
-export default function (props) {
+export default function AddedDay(props) {
   useEffect(() => {
     console.log("Added day", props.exercise);
   }, []);
@@ -31,15 +31,6 @@ export default function (props) {
                 ))}
             </div>
           ))}
-
-          {/* {props.exercises.map((exercise, idx) => (
-            <AddedExercise
-              key={idx}
-              exercise={exercise}
-              onDelete={() => props.onDelete(props.day, exercise)}
-              onUpdate={(data) => props.onUpdate(exercise.name, data)}
-            />
-          ))} */}
         </div>
       </div>
     </>

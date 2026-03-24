@@ -18,7 +18,6 @@ export default function Exercise(props) {
               </button>
             </div>
           </div>
-
           <div className="default exercise-body">{props.desc}</div>
         </div>
       </div>

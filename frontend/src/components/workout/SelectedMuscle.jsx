@@ -9,7 +9,7 @@ export default function SelectedMuscle(props) {
             width="16"
             height="16"
             fill="currentColor"
-            class="bi bi-x"
+            className="bi bi-x"
             viewBox="0 0 16 16"
             onClick={props.onDelete}
           >

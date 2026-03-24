@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
+import { useState } from "react";
 
 function NewPlanDivs(props) {
   const [quantity, setQuantity] = useState("1");
@@ -28,19 +27,8 @@ function NewPlanDivs(props) {
     setQuantity(item.quantity || "1");
     setUnit(item.unit || "g");
     props.setFood(item.food);
-
     if (props.onEdit) props.onEdit(item.index);
-    // Also show the food name back in the input
   };
-
-  // const fetchMessages = async () => {
-  //     const res = await axios.get('http://localhost:5000/getfood');
-  //     setFoods(res.data);
-  // }
-
-  // useEffect(() => {
-  //     fetchMessages();
-  // }, []);
 
   return (
     <>
@@ -82,18 +70,14 @@ function NewPlanDivs(props) {
           </button>
         </div>
         <div className="plan-default plan-divisions-display-div">
-          {/* <div className = "plan-default inner-text">{(props.added).length > 0 ? "" : `Add Foods to Your ${props.title}`}</div> */}
-
           <ul className="plan-default food-list">
             {props.added?.map((item, index) => (
-              <div className="plan-default food-item">
+              <div className="plan-default food-item" key={index}>
                 <li
-                  key={index}
                   id={`food-${item.index}`}
                   className="plan-default food-li"
                 >
                   {item.food}
-
                   <div className="plan-default food-name">
                     <div className="food-user-qty">
                       ({item.quantity || "1"} {item.unit || "g"})
@@ -108,7 +92,7 @@ function NewPlanDivs(props) {
                         width="16"
                         height="16"
                         fill="#2f80ed"
-                        class="bi bi-pencil-fill"
+                        className="bi bi-pencil-fill"
                         viewBox="0 0 16 16"
                       >
                         <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.5.5 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11z" />
@@ -124,7 +108,7 @@ function NewPlanDivs(props) {
                         width="16"
                         height="16"
                         fill="red"
-                        class="bi bi-trash"
+                        className="bi bi-trash"
                         viewBox="0 0 16 16"
                       >
                         <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z" />
@@ -133,7 +117,6 @@ function NewPlanDivs(props) {
                     </button>
                   </div>
                 </li>
-
                 <div className="plan-default food-qtys">
                   Calories: {item.calories} &nbsp; Proteins: {item.proteins}{" "}
                   &nbsp; Fats: {item.fats} &nbsp; Carbs: {item.carbs} &nbsp;
@@ -141,12 +124,6 @@ function NewPlanDivs(props) {
               </div>
             ))}
           </ul>
-
-          {/* {props.added[props.title]?.map((food, idx) => (
-                    <div key={`${food}-${idx}`} className="added-food-item">
-                        {food}
-                    </div>
-                ))} */}
         </div>
       </form>
     </>

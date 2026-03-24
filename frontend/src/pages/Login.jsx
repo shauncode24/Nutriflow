@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
-import axios from "axios";
 import "../styles/Login.css";
-import Input from "../components/Input";
+import Input from "../components/ui/Input";
 import { motion } from "framer-motion";
+import { loginUser, registerUser } from "../api/authApi";
 
 function Login() {
   const navigate = useNavigate();
@@ -19,15 +19,9 @@ function Login() {
         alert("Passwords do not match!");
         return;
       }
-
-      const res = await axios.post("http://localhost:5000/register", {
-        username: username,
-        pass: pass,
-      });
-
+      const res = await registerUser(username, pass);
       alert("Successfully Registered. Press Login to Continue");
-      console.log(res.data);
-
+      console.log(res);
       setIsSignup(false);
       setConfirmPass("");
       navigate("/login");
@@ -38,12 +32,9 @@ function Login() {
 
   const login = async () => {
     try {
-      const res = await axios.post("http://localhost:5000/login", {
-        username,
-        pass,
-      });
-      localStorage.setItem("token", res.data.token);
-      console.log(res.data);
+      const res = await loginUser(username, pass);
+      localStorage.setItem("token", res.token);
+      console.log(res);
       navigate("/main");
     } catch (err) {
       console.error(err);
@@ -59,7 +50,6 @@ function Login() {
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 1 }}
       >
-        {/* <div className="default-login top"> */}
         <div className="default-login main-label">
           <div className="default-login login-icon">
             <svg
@@ -67,7 +57,7 @@ function Login() {
               width="16"
               height="16"
               fill="currentColor"
-              class="bi bi-person"
+              className="bi bi-person"
               viewBox="0 0 16 16"
             >
               <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z" />
@@ -122,11 +112,11 @@ function Login() {
             width="20"
             height="20"
             fill="currentColor"
-            class="bi bi-browser-chrome"
+            className="bi bi-browser-chrome"
             viewBox="0 0 16 16"
           >
             <path
-              fill-rule="evenodd"
+              fillRule="evenodd"
               d="M16 8a8 8 0 0 1-7.022 7.94l1.902-7.098a3 3 0 0 0 .05-1.492A3 3 0 0 0 10.237 6h5.511A8 8 0 0 1 16 8M0 8a8 8 0 0 0 7.927 8l1.426-5.321a3 3 0 0 1-.723.255 3 3 0 0 1-1.743-.147 3 3 0 0 1-1.043-.7L.633 4.876A8 8 0 0 0 0 8m5.004-.167L1.108 3.936A8.003 8.003 0 0 1 15.418 5H8.066a3 3 0 0 0-1.252.243 2.99 2.99 0 0 0-1.81 2.59M8 10a2 2 0 1 0 0-4 2 2 0 0 0 0 4"
             />
           </svg>
@@ -156,7 +146,6 @@ function Login() {
             </>
           )}
         </div>
-        {/* </div> */}
       </motion.div>
     </div>
   );

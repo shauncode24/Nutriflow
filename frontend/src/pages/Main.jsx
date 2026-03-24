@@ -1,59 +1,32 @@
 import { useEffect, useState } from "react";
-import {
-  createRoutesFromElements,
-  useNavigate,
-  useSearchParams,
-} from "react-router-dom";
-import axios from "axios";
-import Header from "../components/Header";
-import herophoto from "../photos/photo-main3.jpg";
-import portraitPhoto from "../photos/photo-main2.jpg";
-import Card from "../components/Cards";
+import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
-import Sidebar from "../components/Sidebar";
+import herophoto from "../photos/photo-main3.jpg";
+import Card from "../components/ui/Cards";
+import Sidebar from "../components/ui/Sidebar";
+import { useUsername } from "../hooks/useUsername";
 import "../styles/Main.css";
 
 function Main() {
-  const [msg, setMsg] = useState("");
+  const username = useUsername();
+
   const [isPortrait, setIsPortrait] = useState(
     window.matchMedia("(orientation: portrait)").matches
   );
   const [isMobile, setIsMobile] = useState(
     window.matchMedia("(max-width: 767px)").matches
   );
-  const [username, setUsername] = useState("");
 
   const [text1, setText1] = useState("");
   const [text2, setText2] = useState("");
   const [text3, setText3] = useState("");
-  const [isTyping, setIsTyping] = useState(false);
-
-  useEffect(() => {
-    const fetchUsername = async () => {
-      try {
-        const res = await axios.get("http://localhost:5000/getusername", {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        });
-        setUsername(res.data.name); // ✅ Access `name` from the response
-      } catch (err) {
-        console.error("Error fetching username:", err);
-      }
-    };
-
-    fetchUsername();
-  }, []);
 
   useEffect(() => {
     const handler = (e) => setIsPortrait(e.matches);
     const mq = window.matchMedia("(orientation: portrait)");
     mq.addEventListener("change", handler);
-
     return () => mq.removeEventListener("change", handler);
   }, []);
-
-  const navigate = useNavigate();
 
   useEffect(() => {
     const handleOrientationChange = (e) => setIsPortrait(e.matches);
@@ -75,11 +48,11 @@ function Main() {
     `Good morning, ${username}! A fresh day, a fresh chance.`,
     `Rise and grind, ${username} — momentum starts now.`,
     `Fuel your morning right, ${username}. Small steps, big wins.`,
-    `The sun’s up — let’s make today brighter, ${username}.`,
+    `The sun's up — let's make today brighter, ${username}.`,
   ];
 
   const afternoonGreetings = (username) => [
-    `Keep it moving, ${username} — the day’s yours to own.`,
+    `Keep it moving, ${username} — the day's yours to own.`,
     `Midday check: progress now = pride later, ${username}.`,
     `Strong afternoons build stronger results, ${username}.`,
     `Halfway through — finish stronger than you started, ${username}.`,
@@ -88,14 +61,14 @@ function Main() {
   const eveningGreetings = (username) => [
     `Evening hustle, ${username} — end the day with fire.`,
     `Good evening! Choices now shape tomorrow, ${username}.`,
-    `Day’s nearly done — make this part count, ${username}.`,
+    `Day's nearly done — make this part count, ${username}.`,
     `Strong finishes beat strong starts — push through, ${username}.`,
   ];
 
   const lateNightGreetings = (username) => [
-    `Burning the midnight oil, ${username}? That’s discipline.`,
+    `Burning the midnight oil, ${username}? That's discipline.`,
     `Late nights, big gains — keep going, ${username}.`,
-    `Your midnight grind is tomorrow’s edge, ${username}.`,
+    `Your midnight grind is tomorrow's edge, ${username}.`,
     `Quiet nights, powerful results — stay on it, ${username}.`,
   ];
 
@@ -130,10 +103,11 @@ function Main() {
     "Wellness is a lifestyle, not a finish line.",
     "One workout, one meal, one day at a time.",
   ];
+
   useEffect(() => {
     setText2(
       motivationalHeadlines[
-        Math.floor(Math.random() * motivationalHeadlines.length)
+      Math.floor(Math.random() * motivationalHeadlines.length)
       ]
     );
   }, []);
@@ -161,62 +135,33 @@ function Main() {
       } else {
         timeoutId = setTimeout(() => {
           currentMessageIndex = (currentMessageIndex + 1) % goalMessages.length;
-          const nextMessage = goalMessages[currentMessageIndex];
-          typeWriter(nextMessage);
+          typeWriter(goalMessages[currentMessageIndex]);
         }, 500);
       }
     };
 
-    const startTyping = () => {
-      const initialMessage =
-        goalMessages[Math.floor(Math.random() * goalMessages.length)];
-      currentMessageIndex = goalMessages.findIndex(
-        (msg) => msg === initialMessage
-      );
-      typeWriter(initialMessage);
-    };
+    const initialMessage =
+      goalMessages[Math.floor(Math.random() * goalMessages.length)];
+    currentMessageIndex = goalMessages.findIndex(
+      (msg) => msg === initialMessage
+    );
+    typeWriter(initialMessage);
 
-    startTyping();
-
-    return () => {
-      clearTimeout(timeoutId);
-    };
+    return () => clearTimeout(timeoutId);
   }, []);
 
   useEffect(() => {
     if (!username) return;
 
-    const getTimeBasedGreeting = () => {
-      const currentTime = new Date().getHours();
+    const currentTime = new Date().getHours();
+    let greetings;
 
-      if (currentTime < 12) {
-        setText1(
-          morningGreetings(username)[
-            Math.floor(Math.random() * morningGreetings(username).length)
-          ]
-        );
-      } else if (currentTime < 17) {
-        setText1(
-          afternoonGreetings(username)[
-            Math.floor(Math.random() * afternoonGreetings(username).length)
-          ]
-        );
-      } else if (currentTime < 21) {
-        setText1(
-          eveningGreetings(username)[
-            Math.floor(Math.random() * eveningGreetings(username).length)
-          ]
-        );
-      } else {
-        setText1(
-          lateNightGreetings(username)[
-            Math.floor(Math.random() * lateNightGreetings(username).length)
-          ]
-        );
-      }
-    };
+    if (currentTime < 12) greetings = morningGreetings(username);
+    else if (currentTime < 17) greetings = afternoonGreetings(username);
+    else if (currentTime < 21) greetings = eveningGreetings(username);
+    else greetings = lateNightGreetings(username);
 
-    getTimeBasedGreeting();
+    setText1(greetings[Math.floor(Math.random() * greetings.length)]);
   }, [username]);
 
   return (
@@ -250,28 +195,23 @@ function Main() {
               description="Track your nutrition, plan healthy meals, and maintain a balanced diet with daily tracking and smarter food choices."
               buttontitle="Log Meal"
               link="/dietplan"
-            ></Card>
+            />
             <Card
               title="Track Your Workout"
               image="https://www.svgrepo.com/show/461254/dumbbell.svg"
               description="Monitor your fitness progress, set workout goals, and stay motivated with detailed analytics and achievements."
               buttontitle="Start Workout"
               link="/workout"
-            ></Card>
+            />
             <Card
               title="Miscellaneous"
               image="https://cdn-icons-png.freepik.com/256/4811/4811032.png?semt=ais_hybrid"
               height="class3"
               description="Comprehensive health tracking including sleep, mood, water intake, and mindfulness for complete wellness."
               buttontitle="Check Wellness"
-            ></Card>
+            />
           </div>
         </div>
-
-        {/* <div className="main-default footer-main">
-
-          <Link to="/dietplan">Dietplan</Link>
-        </div> */}
       </div>
     </>
   );

@@ -1,10 +1,10 @@
 import SetReps from "./SetsReps";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export default function SelectedExercise(props) {
   const fixedString = props.exercise.instructions
-    .replace(/^{/, "[")
-    .replace(/}$/, "]");
+    .replace(/^\{/, "[")
+    .replace(/\}$/, "]");
   const instructions = JSON.parse(fixedString);
 
   const [info, setInfo] = useState();
