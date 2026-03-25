@@ -14,15 +14,17 @@ function NewPlanDivs(props) {
     "pieces",
   ];
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (props.food.trim() === "") return;
+  // FIX: Was <form onSubmit> which can cause page reloads.
+  // Now uses a plain div with onClick handlers on buttons.
+  const handleSubmit = async () => {
+    if (!props.food || props.food.trim() === "") return;
     props.onSubmit(quantity, unit);
     props.setFood("");
     setQuantity("1");
     setUnit("g");
   };
 
+  // FIX: item.index is the food id — was correct, but also pre-fill food name
   const handleEditClick = (item) => {
     setQuantity(item.quantity || "1");
     setUnit(item.unit || "g");
@@ -32,13 +34,14 @@ function NewPlanDivs(props) {
 
   return (
     <>
-      <form className="plan-default plan-divisions" onSubmit={handleSubmit}>
+      <div className="plan-default plan-divisions">
         <div className="plan-default plan-upper">
           <div className="plan-default plan-divisions-image">
-            <img src={props.image} height="100%" width="100%" />
+            <img src={props.image} height="100%" width="100%" alt={props.title} />
           </div>
           <div className="plan-default plan-divisions-title">{props.title}</div>
         </div>
+
         <div className="plan-default plan-divisions-search-div">
           <input
             type="number"
@@ -46,6 +49,7 @@ function NewPlanDivs(props) {
             value={quantity}
             onChange={(e) => setQuantity(e.target.value)}
             placeholder="Qty"
+            min="0"
           />
           <input
             type="text"
@@ -53,6 +57,10 @@ function NewPlanDivs(props) {
             placeholder="Search for foods...."
             onChange={(e) => props.setFood(e.target.value)}
             value={props.food}
+            onKeyDown={(e) => {
+              // Allow submit on Enter key without a form
+              if (e.key === "Enter") handleSubmit();
+            }}
           />
           <select
             value={unit}
@@ -65,10 +73,12 @@ function NewPlanDivs(props) {
               </option>
             ))}
           </select>
-          <button type="submit" className="submit">
-            Submit
+          {/* FIX: Was type="submit" inside a <form>. Now type="button" with onClick. */}
+          <button type="button" className="submit" onClick={handleSubmit}>
+            Add
           </button>
         </div>
+
         <div className="plan-default plan-divisions-display-div">
           <ul className="plan-default food-list">
             {props.added?.map((item, index) => (
@@ -77,7 +87,7 @@ function NewPlanDivs(props) {
                   id={`food-${item.index}`}
                   className="plan-default food-li"
                 >
-                  {item.food}
+                  <span style={{ textTransform: "capitalize" }}>{item.food}</span>
                   <div className="plan-default food-name">
                     <div className="food-user-qty">
                       ({item.quantity || "1"} {item.unit || "g"})
@@ -86,6 +96,7 @@ function NewPlanDivs(props) {
                       type="button"
                       className="plan-default edit-btn"
                       onClick={() => handleEditClick(item)}
+                      title="Edit quantity"
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -102,6 +113,7 @@ function NewPlanDivs(props) {
                       type="button"
                       className="plan-default edit-btn"
                       onClick={() => props.onDelete(item)}
+                      title="Delete food"
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -118,14 +130,19 @@ function NewPlanDivs(props) {
                   </div>
                 </li>
                 <div className="plan-default food-qtys">
-                  Calories: {item.calories} &nbsp; Proteins: {item.proteins}{" "}
-                  &nbsp; Fats: {item.fats} &nbsp; Carbs: {item.carbs} &nbsp;
+                  Calories: {Number(item.calories).toFixed(1)} &nbsp;|&nbsp;
+                  Proteins: {Number(item.proteins).toFixed(1)}g &nbsp;|&nbsp;
+                  Fats: {Number(item.fats).toFixed(1)}g &nbsp;|&nbsp;
+                  Carbs: {Number(item.carbs).toFixed(1)}g
                 </div>
               </div>
             ))}
           </ul>
+          {(!props.added || props.added.length === 0) && (
+            <div className="inner-text">No foods added yet. Search and add above.</div>
+          )}
         </div>
-      </form>
+      </div>
     </>
   );
 }

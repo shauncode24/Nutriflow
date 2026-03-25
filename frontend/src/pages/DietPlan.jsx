@@ -1,5 +1,4 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import NewPlanDivs from "../components/diet/NewPlanDivs";
 import Plans from "../components/diet/Plans";
 import DailySummary from "../components/diet/DailySummary";
@@ -38,6 +37,7 @@ function DietPlan() {
     <>
       <div className="plan-default plan-body">
         <Sidebar user={username} />
+
         <div className="plan-default plan-header">
           <div className="plan-default plan-header-title">
             Create Your Personal Diet Plan
@@ -51,13 +51,12 @@ function DietPlan() {
           <div className="plan-default plan-main-section">
             <div className="plan-default plan-main-section-header">
               <div className="plan-default plan-main-section-title">
-                Your Meals Plans
+                Your Meal Plans
               </div>
               <div className="plan-default plan-main-section-button-div">
                 <button
                   className="plan-default plan-main-section-button"
                   onClick={() => {
-                    setShowNewPlan(!showNewPlan);
                     resetNewPlan();
                     setShowNewPlan(true);
                   }}
@@ -93,6 +92,7 @@ function DietPlan() {
                     planName={plan.plan_name}
                     deletePlan={(planId) => handlePlanDelete(planId)}
                     onClick={() => handlePlanClick(plan.meal_id)}
+                    // FIX: onView now solely drives navigation via getInsights (which calls navigate internally)
                     onView={() => getInsights(plan.meal_id)}
                     aiResponse={aiRes}
                   />
@@ -105,9 +105,10 @@ function DietPlan() {
                     fontSize: "1.2rem",
                     width: "100%",
                     fontFamily: "Outfit",
+                    color: "white",
                   }}
                 >
-                  No meal plans found.
+                  No meal plans found. Click "Add a New Plan" to get started!
                 </div>
               )}
             </div>
@@ -126,6 +127,11 @@ function DietPlan() {
               />
             </div>
             <div className="plan-default new-plan-divisions">
+              {/*
+                FIX: handleSubmit(meal, foodName, qty, unit)
+                The food state (breakfast/lunch/etc) is the current input value.
+                We pass it directly and NewPlanDivs clears via setFood("") after submit.
+              */}
               <NewPlanDivs
                 title="Breakfast"
                 image="https://www.svgrepo.com/show/1877/fried-egg.svg"

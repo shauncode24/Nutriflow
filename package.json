@@ -1,4 +1,10 @@
 {
+  "name": "nutriflow",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "npx concurrently \"npm start --prefix frontend\" \"cd backend && node index.js\" \"cd backend && node server.js\"",
+    "dev": "npx concurrently \"npm start --prefix frontend\" \"cd backend && npx nodemon index.js\" \"cd backend && npx nodemon server.js\""
+  },
   "dependencies": {
     "framer-motion": "^12.23.12"
   }

@@ -126,8 +126,16 @@ export const addFood = async (req, res) => {
 
     res.status(200).json({ message: "Food added or updated successfully" });
   } catch (error) {
-    console.error("Add food error:", error.message);
-    res.status(500).json({ error: "Failed to add or update food" });
+    console.error("Add food error details:", error);
+    const errorMessage =
+      error.message ||
+      error.code ||
+      (error.errors && error.errors[0]?.message) ||
+      "Unknown error";
+    res.status(500).json({
+      error: "Failed to add or update food",
+      details: errorMessage,
+    });
   }
 };
 

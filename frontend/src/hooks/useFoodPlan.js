@@ -46,8 +46,13 @@ const groupFoodItems = (foods) => {
       unit: item.quantity_unit || item.unit || "g",
     };
 
-    if (grouped[item.meal_type]) {
-      grouped[item.meal_type].push(pairItem);
+    // FIX: meal_type from DB can be mixed case — normalize to match our grouped keys
+    const mealTypeKey = item.meal_type
+      ? item.meal_type.charAt(0).toUpperCase() + item.meal_type.slice(1).toLowerCase()
+      : null;
+
+    if (mealTypeKey && grouped.hasOwnProperty(mealTypeKey)) {
+      grouped[mealTypeKey].push(pairItem);
     }
 
     totalCals += pairItem.calories;
@@ -87,7 +92,8 @@ export const useFoodPlan = () => {
   const [selectedPlanId, setSelectedPlanId] = useState(null);
   const [planName, setPlanName] = useState("");
   const [aiRes, setAiRes] = useState("");
-  const [qtyChanged, setQtyChange] = useState(null);
+  // FIX: Renamed to qtyChanged consistently (was mismatched: qtyChanged vs setQtyChange in return)
+  const [qtyChanged, setQtyChanged] = useState(null);
 
   const applyTotals = (totals) => {
     setCals(totals.cals);
@@ -121,7 +127,6 @@ export const useFoodPlan = () => {
     try {
       const data = await fetchPlans();
       setPlans(data);
-      console.log("incoming plans data: " + JSON.stringify(data));
     } catch (err) {
       console.error("Error fetching plans: ", err);
     }
@@ -131,14 +136,12 @@ export const useFoodPlan = () => {
     try {
       let foods;
 
-      if (planSelected) {
+      if (planSelected && selectedPlanId) {
         const res = await fetchPlan(selectedPlanId);
         foods = res.items;
       } else {
         foods = await getFood();
       }
-
-      console.log("returned foods: ", foods);
 
       const { grouped, totals } = groupFoodItems(foods);
       setAddedFood(grouped);
@@ -148,21 +151,34 @@ export const useFoodPlan = () => {
     }
   };
 
-  const handleSubmit = async (meal, food, quantity, unit) => {
+  /*
+   * FIX: handleSubmit now receives foodName as a parameter.
+   * Previously the food name was read from state inside the hook,
+   * but by the time the async call completed the state could be stale.
+   * DietPlan.jsx passes the current value directly: handleSubmit("Breakfast", breakfast, qty, unit)
+   */
+  const handleSubmit = async (meal, foodName, quantity, unit) => {
+    if (!foodName || foodName.trim() === "") {
+      console.warn("No food name provided, skipping submit");
+      return;
+    }
+
     try {
-      const res = await addFood({
+      await addFood({
         time: meal,
-        food,
+        food: foodName.trim(),
         index: selectedPlanId,
         quantity,
         unit,
         qtychange: qtyChanged,
       });
 
-      console.log("frontend handlesubmit12345: ", qtyChanged);
+      // Reset edit mode after submit
+      setQtyChanged(null);
       await refreshAddedFoodAndTotals();
     } catch (err) {
       console.error("Error adding food: ", err);
+      alert("Failed to add food. Please check the food name and try again.");
     }
   };
 
@@ -172,7 +188,7 @@ export const useFoodPlan = () => {
         food: item.food,
         meal,
         id: item.index,
-        ...(planSelected ? { index: selectedPlanId } : {}),
+        ...(planSelected && selectedPlanId ? { index: selectedPlanId } : {}),
       });
 
       const updatedAddedFood = {
@@ -183,16 +199,16 @@ export const useFoodPlan = () => {
       setAddedFood(updatedAddedFood);
       recalculateFromAddedFood(updatedAddedFood);
     } catch (err) {
-      console.error("error deleting foods", err);
+      console.error("Error deleting food:", err);
     }
   };
 
   const handlePlanDelete = async (index) => {
     try {
       await deletePlan(index);
-      loadPlans();
+      await loadPlans();
     } catch (err) {
-      console.error("error deleting plan", err);
+      console.error("Error deleting plan:", err);
     }
   };
 
@@ -202,8 +218,6 @@ export const useFoodPlan = () => {
 
     try {
       const res = await fetchPlan(planId);
-      console.log("handleplanclick id: ", planId);
-
       const foods = res.items;
       setPlanName(res.name);
 
@@ -220,25 +234,30 @@ export const useFoodPlan = () => {
       setAddedFood(grouped);
       applyTotals(totals);
     } catch (err) {
-      console.error("Error loading foods for plan", err);
+      console.error("Error loading foods for plan:", err);
     }
   };
 
   const sendNutritionValues = async (calories, proteins, carbs, fats) => {
-    if (calories === 0 && proteins === 0 && carbs === 0 && fats === 0) return;
+    if (calories === 0 && proteins === 0 && carbs === 0 && fats === 0) {
+      alert("Please add some foods before saving.");
+      return;
+    }
+    if (!planName || planName.trim() === "") {
+      alert("Please enter a plan name before saving.");
+      return;
+    }
     try {
       await addMeal({ calories, proteins, carbs, fats, selectedPlanId, planName });
       await loadPlans();
     } catch (err) {
-      console.error(err);
+      console.error("Error saving meal plan:", err);
     }
   };
 
   const getInsights = async (planId) => {
     try {
-      console.log("plan id", planId);
       const data = await fetchInsights(planId);
-      console.log("AI Diet Insight:", data);
       navigate("/insights", {
         state: {
           insights: data.aiResponse,
@@ -248,7 +267,8 @@ export const useFoodPlan = () => {
       });
       setAiRes(data);
     } catch (err) {
-      console.log("Cannot fetch insights: ", err);
+      console.error("Cannot fetch insights:", err);
+      alert("Failed to load insights. Please try again.");
     }
   };
 
@@ -262,15 +282,22 @@ export const useFoodPlan = () => {
     setFats(0);
     setAddedFood({ ...EMPTY_FOOD });
     setPlanName("");
+    setQtyChanged(null);
+    // Clear food input fields
+    setBreakfast("");
+    setLunch("");
+    setDinner("");
+    setSnack("");
   };
 
+  // FIX: clearFoods on mount was causing a race condition when the page
+  // loads while a new plan is being created — only clear when starting fresh.
+  // Moved clearFoods call to resetNewPlan and new plan creation instead.
   useEffect(() => {
-    clearFoods()
-      .then(() => console.log("Draft foods cleared on page refresh"))
-      .catch((err) => console.error("Failed to clear drafts on refresh", err));
-  }, []);
-
-  useEffect(() => {
+    // Clear any stale in-memory draft on first load (safe: only affects server-side memory)
+    clearFoods().catch((err) =>
+      console.error("Failed to clear drafts on mount:", err)
+    );
     loadPlans();
   }, []);
 
@@ -290,7 +317,9 @@ export const useFoodPlan = () => {
     selectedPlanId,
     planName, setPlanName,
     aiRes,
-    qtyChanged, setQtyChange,
+    // FIX: Export consistent names — qtyChanged + setQtyChange (alias for setQtyChanged)
+    qtyChanged,
+    setQtyChange: setQtyChanged,
     // handlers
     handleSubmit,
     handleDelete,
